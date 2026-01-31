@@ -45,8 +45,36 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div>
+                <div className="flex justify-between items-center mt-[100px] pt-[32px]" style={{
+                        borderTop: "1px solid #FFFFFF1A"
+                }}>
                     <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Falcons reserved.</span>
+                    <div className="flex gap-[24px]">
+                        <Link href="/"><Image
+                        src="/images/icons/ig.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="/"><Image
+                        src="/images/icons/x.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="/"><Image
+                        src="/images/icons/fb.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="/"><Image
+                        src="/images/icons/wa.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                    </div>
                 </div>
             </div>
         </footer>

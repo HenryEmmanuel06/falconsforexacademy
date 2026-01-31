@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function WhoWeAre() {
     return (
-        <section className="py-[100px]">
+        <section className="py-[100px] bg-white">
             <div className="container">
                 <div className="flex justify-between">
                     <div className="">
