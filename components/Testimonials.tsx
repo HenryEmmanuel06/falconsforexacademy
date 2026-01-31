@@ -119,7 +119,7 @@ export default function Testimonials() {
                                 height={15}
                             />
                         </div>
-                        <p className="leading-tight pt-[5px] text-[18px]">
+                        <p className="leading-tight pt-[5px] text-black text-[18px]">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                             tempor incididunt ut labore et dolore magna aliqua.
                             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -134,7 +134,7 @@ export default function Testimonials() {
                                     className="rounded-[8px]"
                                 />
                                 <div>
-                                    <p className="font-medium text-[18px] pt-[10px]">
+                                    <p className="font-medium text-[18px] text-black pt-[10px]">
                                         Sarah Harp
                                     </p>
                                     <p className="pt-[5px] text-[#535862] text-[14px]">
