@@ -19,7 +19,7 @@ export default function HeroSection() {
 
                                     <span className="text-sm font-medium text-[#414651]">New Mentorship Cohort Open</span>
                                 </div>
-                                <h1 className="text-[60px] font-semibold leading-none pt-[20px]">
+                                <h1 className="text-[60px] font-semibold leading-none pt-[20px] text-[#091B25]">
                                     Master Forex With Proven Strategy
                                 </h1>
                                 <p className="text-[#091B25] font-normal text-[20px] pt-[20px] leading-normal">Stop gambling and start trading. We teach a disciplined, ruled based approach to the Forex market designed for consistent profit in the market.</p>
