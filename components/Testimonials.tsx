@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Testimonials() {
     return (
-        <section>
+        <section className="bg-white">
             <div className="container pt-[90px] pb-[50px]">
                 <div className="flex justify-between">
                     <div>
