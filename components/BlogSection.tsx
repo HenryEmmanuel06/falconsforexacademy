@@ -5,8 +5,8 @@ export default function BlogSection() {
     return (
         <section className="py-[60px] bg-white">
             <div className="container">
-                <h2 className="text-center text-[40px] font-medium">Amazing Contents To Keep You Informed</h2>
-                <p className="text-center text-[20px] max-w-[858px] mx-auto">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <h2 className="text-center text-[40px] font-medium text-black">Amazing Contents To Keep You Informed</h2>
+                <p className="text-center text-[20px] max-w-[858px] mx-auto text-black">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 <div className="flex pt-[55px]">
                     <div className="">
                         <Image 
