@@ -3,12 +3,12 @@ import Image from "next/image";
 
 export default function Pricing() {
     return (
-        <section className="py-[100px] bg-[#091B25]">
+        <section className="py-[50px] md:py-[70px] lg:py-[100px] bg-[#091B25]">
             <div className="container">
-                <h2 className="text-[40px] text-center text-white font-medium">Simple, Transparent Pricing</h2>
-                <p className="text-[20px] text-center text-white font-normal max-w-[570px] mx-auto">Whether monthly or lifetime, at Falconsforexacademy we got a program for you.</p>
-                <div className="pt-[80px]">
-                    <div className="flex gap-[35px]">
+                <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-center text-white font-medium">Simple, Transparent Pricing</h2>
+                <p className="text-[18px] md:text-[20px] text-center text-white font-normal max-w-[570px] mx-auto">Whether monthly or lifetime, at Falconsforexacademy we got a program for you.</p>
+                <div className="pt-[40px] md:pt-[80px]">
+                    <div className="flex flex-col lg:flex-row gap-[35px]">
                         {/* <!-- Card --> */}
                         <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#CC5DF980] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.22)_0%,rgba(168,85,247,0.12)_25%,rgba(168,85,247,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
@@ -21,12 +21,12 @@ export default function Pricing() {
                             </div>
 
                             {/* <!-- Title --> */}
-                            <h2 className="text-[20px] font-bold text-[#091B25]">1 Month Plan</h2>
+                            <h2 className="text-[18px] md:text-[20px] font-bold text-[#091B25]">1 Month Plan</h2>
 
                             {/* <!-- Price --> */}
                             <div className="">
-                                <span className="text-[36px] font-bold text-[#CC5DF9]">$150</span>
-                                <span className="text-[16px] font-medium text-[#091B25]">/Monthly</span>
+                                <span className="text-[30px] md:text-[36px] font-bold text-[#CC5DF9]">$150</span>
+                                <span className="text-[14px] md:text-[16px] font-medium text-[#091B25]">/Monthly</span>
                             </div>
 
                             {/* <!-- Divider --> */}
@@ -73,12 +73,12 @@ export default function Pricing() {
                                     Weekly Market Analysis
                                 </li>
                             </ul>
-                            {/* <!-- Button --> */}
-                            <button className="w-full mt-auto py-3 rounded-full border-2 border-[#CC5DF9] text-[#CC5DF9] font-medium hover:bg-[#CC5DF9] hover:text-white transition cursor-pointer">
-                                Get Started
-                            </button>
-
-
+                            <div className="pt-[40px] md:pt-[90px] mt-auto">
+                                {/* <!-- Button --> */}
+                                <button className="w-full mt-auto py-3 rounded-full border-2 border-[#CC5DF9] text-[#CC5DF9] font-medium hover:bg-[#CC5DF9] hover:text-white transition cursor-pointer">
+                                    Get Started
+                                </button>
+                            </div>
                         </div>
 
 
@@ -96,12 +96,12 @@ export default function Pricing() {
                             </div>
 
                             {/* <!-- Title --> */}
-                            <h2 className="text-[20px] font-bold text-[#091B25]">3 Months Plan</h2>
+                            <h2 className="text-[18px] md:text-[20px] font-bold text-[#091B25]">3 Months Plan</h2>
 
                             {/* <!-- Price --> */}
                             <div className="">
-                                <span className="text-[36px] font-bold text-[#091B25]">$250</span>
-                                <span className="text-[16px] font-medium text-[#091B25]">/Quarterly</span>
+                                <span className="text-[30px] md:text-[36px] font-bold text-[#091B25]">$250</span>
+                                <span className="text-[14px] md:text-[16px] font-medium text-[#091B25]">/Quarterly</span>
                             </div>
 
                             {/* <!-- Divider --> */}
@@ -148,11 +148,13 @@ export default function Pricing() {
                                     Weekly Physical Q&A & Trade Review Sessions
                                 </li>
                             </ul>
+                            <div className="pt-[40px] md:pt-[90px]">
+                                {/* <!-- Button --> */}
+                                <button className="mt-auto w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer">
+                                    Get Started
+                                </button>
+                            </div>
 
-                            {/* <!-- Button --> */}
-                            <button className="mt-auto w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer">
-                                Get Started
-                            </button>
 
                         </div>
 
@@ -172,12 +174,12 @@ export default function Pricing() {
                             </div>
 
                             {/* <!-- Title --> */}
-                            <h2 className="text-[20px] font-bold text-[#091B25]">6 Months Plan</h2>
+                            <h2 className="text-[18px] md:text-[20px] font-bold text-[#091B25]">6 Months Plan</h2>
 
                             {/* <!-- Price --> */}
                             <div className="">
-                                <span className="text-[36px] font-bold text-[#FF8513]">$450</span>
-                                <span className="text-[16px] font-medium text-[#091B25]">/Biannual</span>
+                                <span className="text-[30px] md:text-[36px] font-bold text-[#FF8513]">$450</span>
+                                <span className="text-[14px] md:text-[16px] font-medium text-[#091B25]">/Biannual</span>
                             </div>
 
                             {/* <!-- Divider --> */}
@@ -224,7 +226,7 @@ export default function Pricing() {
                                     Weekly Physical Q&A & Trade Review Sessions
                                 </li>
                             </ul>
-                            <div className="pt-[90px]">
+                            <div className="pt-[40px] md:pt-[90px]">
                                 {/* <!-- Button --> */}
                                 <button className="mt-auto w-full py-3 rounded-full border-2 border-[#FF8513] text-[#FF8513] font-medium hover:bg-[#FF8513] hover:text-white transition cursor-pointer">
                                     Get Started
