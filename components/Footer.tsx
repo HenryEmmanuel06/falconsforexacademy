@@ -5,7 +5,7 @@ export default function Footer() {
     return (
         <footer className="bg-[#091B25] pt-[80px] pb-[30px]">
             <div className="container">
-                <div className="flex justify-between">
+                <div className="flex flex-col lg:flex-row justify-between gap-[40px]">
                     <div>
                         <Image
                             src="/images/footer_logo.png"
@@ -15,7 +15,7 @@ export default function Footer() {
                         />
                         <p className="text-[#919191] text-[14px] font-normal max-w-[323px] pt-[25px]">Innovative training that focuses more on providing comprehensive trading solutions.</p>
                     </div>
-                    <div className="flex gap-[150px]">
+                    <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[150px]">
 
                         <div className="text-white">
                             <h4 className="text-[16px] font-medium">Company</h4>
@@ -45,7 +45,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mt-[100px] pt-[32px]" style={{
+                <div className="flex flex-col lg:flex-row gap-[20px] justify-between items-center mt-[50px] lg:mt-[100px] pt-[32px]" style={{
                         borderTop: "1px solid #FFFFFF1A"
                 }}>
                     <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Falcons reserved.</span>

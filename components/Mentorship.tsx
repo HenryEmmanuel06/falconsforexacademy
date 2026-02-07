@@ -49,7 +49,7 @@ export default function Mentorship() {
                         </div>
 
                         <p className="text-[14px] max-w-[400px] lg:max-w-[280px] pt-[25px]">Understand how the forex market moves. We teach how to read price, spot trends, and identify good trading opportunities.</p>
-              max-w-auto lg:          <Image
+                     <Image
                             src="/images/news_img_1.png"
                             alt="svg"
                             width={335}
