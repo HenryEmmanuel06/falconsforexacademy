@@ -3,7 +3,6 @@ import Image from "next/image";
 
 export default function AboutHeroSection() {
     return (
-        <>
             <section className="bg-white">
                 <div className="container">
                     <div className="flex lg:flex-row flex-col justify-between py-[40px] md:pt-[50px] md:pb-[74px] gap-[40px] lg:gap-[96px]">
@@ -42,26 +41,17 @@ export default function AboutHeroSection() {
                             </div>
                         </div>
 
-                        <div>
                             <Image
-                            className="w-[100%]"
+                                className="w-[100%] h-[100%]"
                                 src="/images/banner-img-2.png"
                                 alt="banner"
-                                height={597}
-                                width={609}
+                                height={200}
+                                width={200}
                             />
-                        </div>
                     </div>
                 </div>
             </section>
-            <div className="bg-[#091B25] text-white py-[60px]">
-                <div className="container">
-                    <div className="flex flex-col lg:flex-row justify-between items-center gap-[20px]">
-                       
-                    </div>
-                </div>
-            </div>
-        </>
+            
 
     );
 }
