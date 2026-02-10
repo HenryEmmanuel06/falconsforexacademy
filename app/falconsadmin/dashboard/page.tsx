@@ -3,24 +3,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BlogList from "@/components/admin/BlogList";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is authenticated
     const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/admin/auth/check");
-        if (!response.ok) {
-          router.push("/falconsadmin/login");
-        }
-      } catch (error) {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
         router.push("/falconsadmin/login");
-      } finally {
-        setLoading(false);
+        return;
       }
+      setLoading(false);
     };
 
     checkAuth();
@@ -28,7 +24,7 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/auth/logout", { method: "POST" });
+      await supabase.auth.signOut();
       router.push("/falconsadmin/login");
     } catch (error) {
       console.error("Logout failed:", error);

@@ -1,14 +1,171 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Pricing() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<string>("1 Month Plan");
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [emailValidationStatus, setEmailValidationStatus] = useState<"idle" | "validating" | "valid" | "invalid">("idle");
+    const [emailValidationMessage, setEmailValidationMessage] = useState<string | null>(null);
+    const [paymentOption, setPaymentOption] = useState<"USD" | "Naira" | "Crypto">("USD");
+    const [location, setLocation] = useState<"Kano" | "Abuja">("Abuja");
+    const [isProceeding, setIsProceeding] = useState(false);
+    const [proceedError, setProceedError] = useState<string | null>(null);
+
+    const planLabel = useMemo(() => selectedPlan, [selectedPlan]);
+
+    const openModal = (plan: string) => {
+        setSelectedPlan(plan);
+        setProceedError(null);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const isFormFilled = useMemo(() => {
+        if (!fullName.trim()) return false;
+        if (!email.trim()) return false;
+        if (!selectedPlan.trim()) return false;
+        if (!location.trim()) return false;
+        if (!paymentOption.trim()) return false;
+        if (paymentOption === "Crypto") return false;
+        return true;
+    }, [email, fullName, location, paymentOption, selectedPlan]);
+
+    const canProceed = useMemo(() => {
+        return isFormFilled && emailValidationStatus === "valid" && !isProceeding;
+    }, [emailValidationStatus, isFormFilled, isProceeding]);
+
+    const handleProceed = async () => {
+        setProceedError(null);
+
+        if (!fullName.trim()) {
+            setProceedError("Full name is required");
+            return;
+        }
+
+        if (!email.trim()) {
+            setProceedError("Email address is required");
+            return;
+        }
+
+        if (paymentOption === "Crypto") {
+            setProceedError("Crypto payment is not available for now");
+            return;
+        }
+
+        try {
+            setIsProceeding(true);
+
+            const res = await fetch("/api/paystack/initialize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    fullName,
+                    plan: selectedPlan,
+                    location,
+                    paymentOption,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setProceedError(data?.error ?? "Failed to initialize payment");
+                return;
+            }
+
+            if (!data?.authorization_url) {
+                setProceedError("Payment initialization failed: missing authorization URL");
+                return;
+            }
+
+            window.location.href = data.authorization_url;
+        } catch (e) {
+            const message = e instanceof Error ? e.message : "Unknown error";
+            setProceedError(message);
+        } finally {
+            setIsProceeding(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!isModalOpen) return;
+
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [isModalOpen]);
+
+    useEffect(() => {
+        if (!isModalOpen) return;
+
+        const trimmedEmail = email.trim();
+
+        if (!trimmedEmail) {
+            setEmailValidationStatus("idle");
+            setEmailValidationMessage(null);
+            return;
+        }
+
+        setEmailValidationStatus("validating");
+        setEmailValidationMessage(null);
+
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(async () => {
+            try {
+                const res = await fetch(`/api/validate-email?email=${encodeURIComponent(trimmedEmail)}`, {
+                    method: "GET",
+                    signal: controller.signal,
+                });
+
+                const data = await res.json().catch(() => null);
+
+                if (!res.ok) {
+                    setEmailValidationStatus("invalid");
+                    setEmailValidationMessage("Email validation failed");
+                    return;
+                }
+
+                if (data?.valid === true) {
+                    setEmailValidationStatus("valid");
+                    setEmailValidationMessage(null);
+                } else {
+                    setEmailValidationStatus("invalid");
+                    setEmailValidationMessage("Please enter a valid email");
+                }
+            } catch (e) {
+                if (controller.signal.aborted) return;
+                setEmailValidationStatus("invalid");
+                setEmailValidationMessage("Email validation failed");
+            }
+        }, 2000);
+
+        return () => {
+            controller.abort();
+            window.clearTimeout(timeoutId);
+        };
+    }, [email, isModalOpen]);
+
     return (
         <section className="py-[50px] md:py-[70px] lg:py-[100px] bg-[#091B25]">
             <div className="container">
                 <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-center text-white font-medium">Simple, Transparent Pricing</h2>
                 <p className="text-[18px] md:text-[20px] text-center text-white font-normal max-w-[570px] mx-auto">Whether monthly or lifetime, at Falconsforexacademy we got a program for you.</p>
                 <div className="pt-[40px] md:pt-[80px]">
-                    <div className="flex flex-col lg:flex-row gap-[35px]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[35px]">
                         {/* <!-- Card --> */}
                         <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#CC5DF980] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.22)_0%,rgba(168,85,247,0.12)_25%,rgba(168,85,247,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
@@ -96,7 +253,10 @@ export default function Pricing() {
                             </ul>
                             <div className="pt-[40px] md:pt-[90px] mt-auto">
                                 {/* <!-- Button --> */}
-                                <button className="w-full mt-auto py-3 rounded-full border-2 border-[#CC5DF9] text-[#CC5DF9] font-medium hover:bg-[#CC5DF9] hover:text-white transition cursor-pointer">
+                                <button
+                                    onClick={() => openModal("1 Month Plan")}
+                                    className="w-full mt-auto py-3 rounded-full border-2 border-[#CC5DF9] text-[#CC5DF9] font-medium hover:bg-[#CC5DF9] hover:text-white transition cursor-pointer"
+                                >
                                     Get Started
                                 </button>
                             </div>
@@ -105,7 +265,7 @@ export default function Pricing() {
 
 
                         {/* <!-- Card --> */}
-                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="mt-auto border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#091B25] mb-[20px]">
@@ -187,12 +347,15 @@ export default function Pricing() {
                                         <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
                                     </svg>
                                     </span>
-                                    Weekly Physical Q&A & Trade Review Sessions
+                                    Weekly Physical Q&A Session
                                 </li>
                             </ul>
                             <div className="pt-[40px] md:pt-[90px]">
                                 {/* <!-- Button --> */}
-                                <button className="mt-auto w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer">
+                                <button
+                                    onClick={() => openModal("3 Months Plan")}
+                                    className="mt-auto w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer"
+                                >
                                     Get Started
                                 </button>
                             </div>
@@ -204,7 +367,7 @@ export default function Pricing() {
 
 
                         {/* <!-- Card --> */}
-                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#FF851380]  bg-[radial-gradient(circle_at_top_right,rgba(255,133,19,0.22)_0%,rgba(255,133,19,0.12)_25%,rgba(255,133,19,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#FF851380] md:col-span-2 lg:col-span-1 bg-[radial-gradient(circle_at_top_right,rgba(255,133,19,0.22)_0%,rgba(255,133,19,0.12)_25%,rgba(255,133,19,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#FF8513] mb-[20px]">
@@ -291,7 +454,10 @@ export default function Pricing() {
                             </ul>
                             <div className="pt-[40px] md:pt-[90px]">
                                 {/* <!-- Button --> */}
-                                <button className="mt-auto w-full py-3 rounded-full border-2 border-[#FF8513] text-[#FF8513] font-medium hover:bg-[#FF8513] hover:text-white transition cursor-pointer">
+                                <button
+                                    onClick={() => openModal("6 Months Plan")}
+                                    className="mt-auto w-full py-3 rounded-full border-2 border-[#FF8513] text-[#FF8513] font-medium hover:bg-[#FF8513] hover:text-white transition cursor-pointer"
+                                >
                                     Get Started
                                 </button>
                             </div>
@@ -355,7 +521,10 @@ export default function Pricing() {
                             </p>
                             <div className="flex items-end justify-start lg:justify-end">
                                 {/* <!-- Button --> */}
-                                <button className="mt-auto px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md bg-[#091B25] rounded-full text-[#ffff] font-medium cursor-pointer">
+                                <button
+                                    onClick={() => openModal("Premium Signals")}
+                                    className="mt-auto px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md bg-[#091B25] rounded-full text-[#ffff] font-medium cursor-pointer"
+                                >
                                     Get Started
                                 </button>
                             </div>
@@ -364,6 +533,147 @@ export default function Pricing() {
                 </div>
 
             </div>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 z-[1600] flex items-center justify-center overflow-hidden">
+                    <button
+                        type="button"
+                        aria-label="Close modal"
+                        onClick={closeModal}
+                        className="absolute inset-0 bg-black/60"
+                    />
+
+                    <div className="relative mx-auto w-[92%] max-w-[900px] max-h-[85vh] overflow-y-auto rounded-[30px] bg-white px-[20px] py-[24px] md:px-[40px] md:py-[36px] shadow-2xl">
+                        <div className="flex items-start justify-between gap-6">
+                            <div>
+                                <h3 className="text-[24px] md:text-[28px] font-semibold text-[#091B25]">Let’s start with your details</h3>
+                                <p className="text-[14px] md:text-[16px] text-[#535862] pt-[6px]">Provide essential information to proceed.</p>
+                            </div>
+                            <button
+                                type="button"
+                                aria-label="Close modal"
+                                onClick={closeModal}
+                                className="w-[40px] h-[40px] rounded-full border border-[#E4E7EC] flex items-center justify-center text-[#091B25]"
+                            >
+                                <span className="text-[20px] leading-none">×</span>
+                            </button>
+                        </div>
+
+                        <div className="pt-[22px] grid grid-cols-1 md:grid-cols-2 gap-[18px]">
+                            <div className="md:col-span-2">
+                                <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Full Name</label>
+                                <input
+                                    value={fullName}
+                                    onChange={(e) => {
+                                        setProceedError(null);
+                                        setFullName(e.target.value);
+                                    }}
+                                    placeholder="Enter your name"
+                                    className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none"
+                                />
+                            </div>
+
+                            <div className="md:col-span-2">
+                                <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Email Address</label>
+                                <input
+                                    value={email}
+                                    onChange={(e) => {
+                                        setProceedError(null);
+                                        setEmail(e.target.value);
+                                    }}
+                                    placeholder="Enter your email"
+                                    type="email"
+                                    className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none"
+                                />
+                                {email.trim() && (
+                                    <p
+                                        className={`pt-[8px] text-[13px] ${
+                                            emailValidationStatus === "valid" ? "text-green-600" : emailValidationStatus === "invalid" ? "text-red-600" : "text-[#535862]"
+                                        }`}
+                                    >
+                                        {emailValidationStatus === "validating"
+                                            ? "Validating email..."
+                                            : emailValidationStatus === "valid"
+                                              ? "Email is valid"
+                                              : emailValidationStatus === "invalid"
+                                                ? emailValidationMessage ?? "Please enter a valid email"
+                                                : ""}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Select Payment Option</label>
+                                <select
+                                    value={paymentOption}
+                                    onChange={(e) => {
+                                        setProceedError(null);
+                                        setPaymentOption(e.target.value as "USD" | "Naira" | "Crypto");
+                                    }}
+                                    className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none bg-white"
+                                >
+                                    <option value="USD">USD</option>
+                                    <option value="Naira">Naira</option>
+                                    <option value="Crypto">Crypto</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Location</label>
+                                <select
+                                    value={location}
+                                    onChange={(e) => {
+                                        setProceedError(null);
+                                        setLocation(e.target.value as "Kano" | "Abuja");
+                                    }}
+                                    className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none bg-white"
+                                >
+                                    <option value="Kano">Kano</option>
+                                    <option value="Abuja">Abuja</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="pt-[18px]">
+                            <div className="flex items-center justify-between gap-4 border-t border-[#EAECF0] pt-[18px]">
+                                <div className="flex items-center gap-3">
+                                    <span className="w-[18px] h-[18px] rounded-full border-2 border-[#091B25] flex items-center justify-center">
+                                        <span className="w-[10px] h-[10px] rounded-full bg-[#091B25]" />
+                                    </span>
+                                    <span className="text-[14px] text-[#091B25]">{planLabel} package</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={closeModal}
+                                    className="rounded-full bg-[#EAF0F3] px-[16px] py-[8px] text-[12px] font-medium text-[#091B25]"
+                                >
+                                    Change plan
+                                </button>
+                            </div>
+
+                            {proceedError && (
+                                <div className="pt-[14px]">
+                                    <p className="text-[14px] text-red-600">{proceedError}</p>
+                                </div>
+                            )}
+
+                            <div className="pt-[22px]">
+                                <button
+                                    type="button"
+                                    onClick={handleProceed}
+                                    disabled={!canProceed}
+                                    className={`px-[34px] py-[14px] rounded-full bg-[#091B25] text-white font-semibold ${
+                                        canProceed ? "" : "opacity-50 cursor-not-allowed"
+                                    }`}
+                                >
+                                    {isProceeding ? "Processing..." : "Proceed"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 

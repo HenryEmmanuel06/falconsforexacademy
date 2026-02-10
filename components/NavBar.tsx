@@ -22,7 +22,7 @@ export default function NavBar() {
         </Link>
 
         {/* Nav */}
-        <nav className="hidden md:flex items-center flex-1 pr-[40px] justify-end">
+        <nav className="hidden lg:flex items-center flex-1 pr-[40px] justify-end">
           <ul className="flex items-center justify-center  gap-8 text-md text-[#091B25] font-semibold">
             <li>
               <Link href="/" className="hover:text-zinc-900">Home</Link>
@@ -46,7 +46,7 @@ export default function NavBar() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="hidden md:block rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
+            className="hidden lg:block rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
           >
             Join Academy
           </Link>
@@ -54,7 +54,7 @@ export default function NavBar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden flex flex-col justify-center items-center w-6 h-6 gap-1"
+            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 gap-1"
             aria-label="Toggle mobile menu"
           >
             <span className={`block w-6 h-0.5 bg-[#091B25] transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
@@ -66,7 +66,7 @@ export default function NavBar() {
       
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">
           <div className="container py-4">
             <nav className="flex flex-col space-y-4">
               <ul className="flex flex-col space-y-4 text-md text-[#091B25] font-semibold">

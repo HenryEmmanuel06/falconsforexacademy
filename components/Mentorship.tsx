@@ -31,7 +31,7 @@ export default function Mentorship() {
 
                 </div>
                 {/* cards */}
-                <div className="flex flex-col lg:flex-row mt-[40px] md:mt-[80px] gap-[15px] md:gap-[35px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[40px] md:mt-[80px] gap-[15px] md:gap-[35px]">
 
                     {/* card */}
                     <div className="bg-[#091B25] text-white px-[25px] pt-[50px] pb-[25px] rounded-[30px]">
@@ -86,7 +86,7 @@ export default function Mentorship() {
                     {/* card */}
 
                     {/* card */}
-                    <div className="bg-white text-[#091B25] px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
+                    <div className="bg-white text-[#091B25] md:col-span-2 lg:col-span-1 px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
                         <div className="flex gap-2 justify-between">
                             <h3 className="text-[22px] max-w-auto lg:max-w-[310px] leading-tight font-semibold">
                                 Mindset development & strategy trust

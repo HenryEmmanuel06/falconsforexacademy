@@ -41,17 +41,22 @@ export default function BlogForm({ onSuccess, initialData }: BlogFormProps) {
     setError("");
 
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        throw new Error("You must be logged in to upload images");
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       
-      const { data, error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(fileName, file);
+      const { error: uploadError } = await supabase.storage
+        .from('blog_images')
+        .upload(fileName, file, { upsert: true, contentType: file.type });
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
+        .from('blog_images')
         .getPublicUrl(fileName);
 
       setFormData(prev => ({
@@ -61,7 +66,8 @@ export default function BlogForm({ onSuccess, initialData }: BlogFormProps) {
 
       setSuccess("Image uploaded successfully!");
     } catch (error) {
-      setError("Failed to upload image");
+      const message = error instanceof Error ? error.message : "Failed to upload image";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -74,21 +80,13 @@ export default function BlogForm({ onSuccess, initialData }: BlogFormProps) {
     setSuccess("");
 
     try {
-      // Get the current authenticated user from session
-      const response = await fetch("/api/admin/auth/check");
-      if (!response.ok) {
-        throw new Error("User not authenticated");
-      }
-      
-      const { user } = await response.json();
-      
-      if (!user) {
-        throw new Error("User not authenticated");
-      }
+      const { data, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!data.user) throw new Error("User not authenticated");
 
       const blogData = {
         ...formData,
-        user_id: user.email, // Use email as user_id
+        user_id: data.user.id,
       };
 
       let result;

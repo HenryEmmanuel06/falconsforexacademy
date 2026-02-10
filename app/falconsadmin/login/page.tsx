@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -17,20 +18,15 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      const response = await fetch("/api/admin/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (!error) {
         router.push("/falconsadmin/dashboard");
       } else {
-        setError(data.error || "Login failed");
+        setError(error.message || "Login failed");
       }
     } catch (error) {
       setError("An error occurred during login");

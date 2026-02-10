@@ -23,6 +23,18 @@ body {
   color: var(--foreground);
 }
 
+.blog-pagination .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  margin: 0 3.5px;
+  opacity: 1;
+  background: #9CB0BB;
+}
+
+.blog-pagination .swiper-pagination-bullet-active {
+  background: #091B25;
+}
+
 .container {
   width: 90%;
   max-width: 1240px;
