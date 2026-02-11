@@ -95,7 +95,7 @@ export default function BlogSection() {
                             >
                                 {blogs.map((blog) => (
                                     <SwiperSlide key={blog.id}>
-                                        <div className="h-full">
+                                        <div className="group h-full cursor-pointer">
                                             {blog.blog_image ? (
                                                 <Image 
                                                     src={blog.blog_image}
@@ -122,12 +122,12 @@ export default function BlogSection() {
                                                         alt="arrow"
                                                         width={10}
                                                         height={10}
-                                                        className="pt-[5px]"
+                                                        className="pt-[5px] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
                                                     />
                                                 </div>
                                                 <p className="text-[16px] max-w-[384px] text-[#535862] pt-[8px]">
-                                                    {blog.blog_content.length > 150 
-                                                        ? `${blog.blog_content.substring(0, 150)}...` 
+                                                    {blog.blog_content.length > 70 
+                                                        ? `${blog.blog_content.substring(0, 70)}...` 
                                                         : blog.blog_content
                                                     }
                                                 </p>

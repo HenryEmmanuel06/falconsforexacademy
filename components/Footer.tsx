@@ -15,7 +15,7 @@ export default function Footer() {
                         />
                         <p className="text-[#919191] text-[14px] font-normal max-w-[323px] pt-[25px]">Innovative training that focuses more on providing comprehensive trading solutions.</p>
                     </div>
-                    <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[150px]">
+                    <div className="flex flex-col md:flex-row gap-[40px] md:gap-[150px]">
 
                         <div className="text-white">
                             <h4 className="text-[16px] font-medium">Company</h4>

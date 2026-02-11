@@ -265,7 +265,7 @@ export default function Pricing() {
 
 
                         {/* <!-- Card --> */}
-                        <div className="mt-auto border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="mt-auto h-full border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#091B25] mb-[20px]">
@@ -543,7 +543,7 @@ export default function Pricing() {
                         className="absolute inset-0 bg-black/60"
                     />
 
-                    <div className="relative mx-auto w-[92%] max-w-[900px] max-h-[85vh] overflow-y-auto rounded-[30px] bg-white px-[20px] py-[24px] md:px-[40px] md:py-[36px] shadow-2xl">
+                    <div className="relative mx-auto w-[92%] max-w-[600px] max-h-[85vh] overflow-y-auto rounded-[30px] bg-white px-[20px] py-[24px] md:px-[40px] md:py-[36px] shadow-2xl">
                         <div className="flex items-start justify-between gap-6">
                             <div>
                                 <h3 className="text-[24px] md:text-[28px] font-semibold text-[#091B25]">Let’s start with your details</h3>

@@ -3,9 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const handleScrollToTestimonials = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return;
+
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    const el = document.getElementById("testimonials");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <header className="w-full bg-white py-[17px] relative">
       <div className="container relative flex items-center justify-between gap-4 pb-3">
@@ -34,7 +48,7 @@ export default function NavBar() {
               <Link href="/pricing" className="hover:text-zinc-900">Pricing</Link>
             </li>
             <li>
-              <Link href="/testimonies" className="hover:text-zinc-900">Testimonies</Link>
+              <Link href="/#testimonials" className="hover:text-zinc-900" onClick={handleScrollToTestimonials}>Testimonies</Link>
             </li>
             <li>
               <Link href="/blogs" className="hover:text-zinc-900">Blogs</Link>
@@ -99,9 +113,9 @@ export default function NavBar() {
                 </li>
                 <li>
                   <Link 
-                    href="/testimonies" 
+                    href="/#testimonials" 
                     className="hover:text-zinc-900 block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleScrollToTestimonials}
                   >
                     Testimonies
                   </Link>
