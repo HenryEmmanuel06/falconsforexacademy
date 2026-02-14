@@ -6,7 +6,7 @@ type InitializeRequestBody = {
     fullName?: string;
     plan?: string;
     location?: string;
-    paymentOption?: "USD" | "Naira" | "Crypto";
+    paymentOption?: "Naira" | "Crypto";
 };
 
 const PLAN_AMOUNTS_USD: Record<string, number> = {
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         const body = (await req.json()) as InitializeRequestBody;
         const email = body.email?.trim();
         const plan = body.plan?.trim();
-        const paymentOption = body.paymentOption ?? "USD";
+        const paymentOption = body.paymentOption ?? "Naira";
         const fullName = body.fullName?.trim() ?? "";
         const location = body.location?.trim() ?? "";
 
@@ -55,11 +55,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Crypto payment is not available yet" }, { status: 400 });
         }
 
-        const currency = paymentOption === "Naira" ? "NGN" : "USD";
-        const amount =
-            paymentOption === "Naira"
-                ? Math.round(amountUsd * adminRate * 100)
-                : Math.round(amountUsd * 100);
+        const currency = "NGN";
+        const amount = Math.round(amountUsd * adminRate * 100);
 
         const paystackRes = await fetch("https://api.paystack.co/transaction/initialize", {
             method: "POST",
@@ -104,55 +101,30 @@ export async function POST(req: Request) {
             );
         }
 
-        if (paymentOption === "Naira") {
-            const amountNgn = amountUsd * adminRate;
-            const { error: insertError } = await supabaseAdmin.from("naira_payments").insert({
-                full_name: fullName,
-                email,
-                location,
-                payment_type: "Naira",
-                plan,
-                amount_usd: amountUsd,
-                admin_rate: adminRate,
-                amount_ngn: amountNgn,
-                paystack_reference: reference,
-                paystack_access_code: accessCode ?? null,
-                authorization_url: authorizationUrl,
-                currency,
-                amount_minor: amount,
-                status: "initialized",
-                raw_initialize_response: paystackJson,
-            });
+        const amountNgn = amountUsd * adminRate;
+        const { error: insertError } = await supabaseAdmin.from("naira_payments").insert({
+            full_name: fullName,
+            email,
+            location,
+            payment_type: "Naira",
+            plan,
+            amount_usd: amountUsd,
+            admin_rate: adminRate,
+            amount_ngn: amountNgn,
+            paystack_reference: reference,
+            paystack_access_code: accessCode ?? null,
+            authorization_url: authorizationUrl,
+            currency,
+            amount_minor: amount,
+            status: "initialized",
+            raw_initialize_response: paystackJson,
+        });
 
-            if (insertError) {
-                return NextResponse.json(
-                    { error: "Failed to create payment record", details: insertError.message },
-                    { status: 500 }
-                );
-            }
-        } else {
-            const { error: insertError } = await supabaseAdmin.from("dollar_payments").insert({
-                full_name: fullName,
-                email,
-                location,
-                payment_type: "USD",
-                plan,
-                amount_usd: amountUsd,
-                paystack_reference: reference,
-                paystack_access_code: accessCode ?? null,
-                authorization_url: authorizationUrl,
-                currency,
-                amount_minor: amount,
-                status: "initialized",
-                raw_initialize_response: paystackJson,
-            });
-
-            if (insertError) {
-                return NextResponse.json(
-                    { error: "Failed to create payment record", details: insertError.message },
-                    { status: 500 }
-                );
-            }
+        if (insertError) {
+            return NextResponse.json(
+                { error: "Failed to create payment record", details: insertError.message },
+                { status: 500 }
+            );
         }
 
         return NextResponse.json({ authorization_url: authorizationUrl, reference });

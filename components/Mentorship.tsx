@@ -18,7 +18,7 @@ export default function Mentorship() {
 
                             <span className="text-sm font-medium text-[#414651]">Services We Offer</span>
                         </div>
-                        <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-black font-medium leading-tight pt-[20px] md:pt-[10px] max-w-[650px]">Are you just hearing about forex or you are a struggling trader?</h2>
+                        <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-[#AD6500] font-medium leading-tight pt-[20px] md:pt-[10px] max-w-[650px]">Are you just hearing about forex or you are a struggling trader?</h2>
                     </div>
                     <div className="flex items-center">
                         <p className="text-[16px] md:text-[18px] relative top-3 font-normal text-black max-w-[500px]">Whether monthly or lifetime, at Falconsforexacademy we got a program for you. Our philosophy is built on discipline and trust. We don't chase every candle.</p>

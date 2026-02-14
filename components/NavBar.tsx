@@ -53,6 +53,9 @@ export default function NavBar() {
             <li>
               <Link href="/blogs" className="hover:text-zinc-900">Blogs</Link>
             </li>
+             <li>
+              <Link href="/contact" className="hover:text-zinc-900">Contact</Link>
+            </li>
           </ul>
         </nav>
 
@@ -127,6 +130,15 @@ export default function NavBar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Blogs
+                  </Link>
+                </li>
+                  <li>
+                  <Link 
+                    href="/blogs" 
+                    className="hover:text-zinc-900 block py-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Contact
                   </Link>
                 </li>
               </ul>

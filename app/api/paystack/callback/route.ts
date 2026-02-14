@@ -36,18 +36,10 @@ export async function GET(req: Request) {
                         raw_verify_response: verifyJson,
                     };
 
-                    const { data: usdUpdated, error: usdUpdateError } = await supabaseAdmin
-                        .from("dollar_payments")
+                    await supabaseAdmin
+                        .from("naira_payments")
                         .update(updatePayload)
-                        .eq("paystack_reference", reference)
-                        .select("id");
-
-                    if (usdUpdateError || !usdUpdated || usdUpdated.length === 0) {
-                        await supabaseAdmin
-                            .from("naira_payments")
-                            .update(updatePayload)
-                            .eq("paystack_reference", reference);
-                    }
+                        .eq("paystack_reference", reference);
                 }
             } catch {
                 // ignore verification errors; redirect still continues

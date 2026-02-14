@@ -3,18 +3,34 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Pricing() {
+    const router = useRouter();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<string>("1 Month Plan");
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [emailValidationStatus, setEmailValidationStatus] = useState<"idle" | "validating" | "valid" | "invalid">("idle");
     const [emailValidationMessage, setEmailValidationMessage] = useState<string | null>(null);
-    const [paymentOption, setPaymentOption] = useState<"USD" | "Naira" | "Crypto">("USD");
+    const [paymentOption, setPaymentOption] = useState<"Naira" | "Crypto">("Naira");
+    const [cryptoCoin, setCryptoCoin] = useState<"BTC" | "BNB" | "LTC" | "USDT">("BTC");
     const [location, setLocation] = useState<"Kano" | "Abuja">("Abuja");
     const [isProceeding, setIsProceeding] = useState(false);
     const [proceedError, setProceedError] = useState<string | null>(null);
+
+    const [cryptoCheckout, setCryptoCheckout] = useState<null | {
+        paymentId: string;
+        payAddress: string;
+        payAmount: string;
+        payCurrency: string;
+        expiresAt: string;
+    }>(null);
+    const [cryptoSecondsLeft, setCryptoSecondsLeft] = useState<number | null>(null);
+    const [cryptoPaymentStatus, setCryptoPaymentStatus] = useState<string | null>(null);
+    const [isPollingCryptoStatus, setIsPollingCryptoStatus] = useState(false);
+    const [cryptoServerOffsetMs, setCryptoServerOffsetMs] = useState<number>(0);
 
     const planLabel = useMemo(() => selectedPlan, [selectedPlan]);
 
@@ -26,6 +42,8 @@ export default function Pricing() {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setCryptoCheckout(null);
+        setCryptoPaymentStatus(null);
     };
 
     const isFormFilled = useMemo(() => {
@@ -34,7 +52,6 @@ export default function Pricing() {
         if (!selectedPlan.trim()) return false;
         if (!location.trim()) return false;
         if (!paymentOption.trim()) return false;
-        if (paymentOption === "Crypto") return false;
         return true;
     }, [email, fullName, location, paymentOption, selectedPlan]);
 
@@ -55,41 +72,72 @@ export default function Pricing() {
             return;
         }
 
-        if (paymentOption === "Crypto") {
-            setProceedError("Crypto payment is not available for now");
-            return;
-        }
-
         try {
             setIsProceeding(true);
 
-            const res = await fetch("/api/paystack/initialize", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    fullName,
-                    plan: selectedPlan,
-                    location,
-                    paymentOption,
-                }),
-            });
+            if (paymentOption === "Crypto") {
+                const res = await fetch("/api/nowpayments/create-payment", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        fullName,
+                        plan: selectedPlan,
+                        location,
+                        payCurrency: cryptoCoin,
+                    }),
+                });
 
-            const data = await res.json();
+                const data = await res.json().catch(() => null);
 
-            if (!res.ok) {
-                setProceedError(data?.error ?? "Failed to initialize payment");
-                return;
+                if (!res.ok) {
+                    setProceedError(data?.error ?? "Failed to initialize crypto payment");
+                    return;
+                }
+
+                if (!data?.payAddress || !data?.payAmount || !data?.expiresAt || !data?.paymentId) {
+                    setProceedError("Crypto initialization failed: missing wallet details");
+                    return;
+                }
+
+                setCryptoCheckout({
+                    paymentId: String(data.paymentId),
+                    payAddress: String(data.payAddress),
+                    payAmount: String(data.payAmount),
+                    payCurrency: String(data.payCurrency ?? cryptoCoin),
+                    expiresAt: String(data.expiresAt),
+                });
+            } else {
+                const res = await fetch("/api/paystack/initialize", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        fullName,
+                        plan: selectedPlan,
+                        location,
+                        paymentOption,
+                    }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    setProceedError(data?.error ?? "Failed to initialize payment");
+                    return;
+                }
+
+                if (!data?.authorization_url) {
+                    setProceedError("Payment initialization failed: missing authorization URL");
+                    return;
+                }
+
+                window.location.href = data.authorization_url;
             }
-
-            if (!data?.authorization_url) {
-                setProceedError("Payment initialization failed: missing authorization URL");
-                return;
-            }
-
-            window.location.href = data.authorization_url;
         } catch (e) {
             const message = e instanceof Error ? e.message : "Unknown error";
             setProceedError(message);
@@ -97,6 +145,111 @@ export default function Pricing() {
             setIsProceeding(false);
         }
     };
+
+    useEffect(() => {
+        if (!cryptoCheckout?.expiresAt) {
+            setCryptoSecondsLeft(null);
+            return;
+        }
+
+        const expiresAtMs = new Date(cryptoCheckout.expiresAt).getTime();
+
+        const update = () => {
+            const now = Date.now() + cryptoServerOffsetMs;
+            const seconds = Math.max(0, Math.floor((expiresAtMs - now) / 1000));
+            setCryptoSecondsLeft(seconds);
+        };
+
+        update();
+        const id = window.setInterval(update, 1000);
+        return () => window.clearInterval(id);
+    }, [cryptoCheckout?.expiresAt, cryptoServerOffsetMs]);
+
+    useEffect(() => {
+        if (!cryptoCheckout?.paymentId) {
+            setCryptoPaymentStatus(null);
+            return;
+        }
+
+        if (typeof cryptoSecondsLeft === "number" && cryptoSecondsLeft <= 0) {
+            setCryptoPaymentStatus("expired");
+            return;
+        }
+
+        let stopped = false;
+        let intervalId: number | null = null;
+
+        const poll = async () => {
+            if (stopped) return;
+            setIsPollingCryptoStatus(true);
+            try {
+                const res = await fetch(`/api/nowpayments/payment-status?paymentId=${encodeURIComponent(cryptoCheckout.paymentId)}`, {
+                    method: "GET",
+                    cache: "no-store",
+                });
+                const data = await res.json().catch(() => null);
+                if (!res.ok || !data) return;
+
+                if (data.serverNow) {
+                    const serverNowMs = new Date(String(data.serverNow)).getTime();
+                    if (Number.isFinite(serverNowMs)) {
+                        setCryptoServerOffsetMs(serverNowMs - Date.now());
+                    }
+                }
+
+                if (data.dbExpiresAt) {
+                    const dbExpiresAt = String(data.dbExpiresAt);
+                    if (dbExpiresAt && dbExpiresAt !== cryptoCheckout.expiresAt) {
+                        setCryptoCheckout((prev) => (prev ? { ...prev, expiresAt: dbExpiresAt } : prev));
+                    }
+                }
+
+                const dbStatusRaw = data.dbStatus ?? "unknown";
+                const status = String(dbStatusRaw).toLowerCase();
+                setCryptoPaymentStatus(String(dbStatusRaw));
+
+                const actuallyPaidRaw = (data as any).actuallyPaid;
+                const actuallyPaid =
+                    typeof actuallyPaidRaw === "number"
+                        ? actuallyPaidRaw
+                        : typeof actuallyPaidRaw === "string"
+                          ? Number(actuallyPaidRaw)
+                          : 0;
+
+                const isPaid = Number.isFinite(actuallyPaid) && actuallyPaid > 0;
+
+                if (status === "finished" || (status === "confirmed" && isPaid)) {
+                    stopped = true;
+                    if (intervalId) window.clearInterval(intervalId);
+                    setCryptoCheckout(null);
+                    router.push(`/payment/success?paymentId=${encodeURIComponent(String(cryptoCheckout.paymentId))}&provider=nowpayments`);
+                }
+
+                const failureStatuses = new Set(["failed", "refunded", "expired", "cancelled", "canceled"]);
+                if (failureStatuses.has(status)) {
+                    stopped = true;
+                    if (intervalId) window.clearInterval(intervalId);
+                    setCryptoCheckout(null);
+                    router.push(
+                        `/payment/failed?paymentId=${encodeURIComponent(String(cryptoCheckout.paymentId))}&status=${encodeURIComponent(status)}&provider=nowpayments`
+                    );
+                }
+            } catch {
+                // ignore polling errors
+            } finally {
+                if (!stopped) setIsPollingCryptoStatus(false);
+            }
+        };
+
+        poll();
+        intervalId = window.setInterval(poll, 5000);
+
+        return () => {
+            stopped = true;
+            if (intervalId) window.clearInterval(intervalId);
+            setIsPollingCryptoStatus(false);
+        };
+    }, [cryptoCheckout?.paymentId, cryptoSecondsLeft, router]);
 
     useEffect(() => {
         if (!isModalOpen) return;
@@ -194,7 +347,6 @@ export default function Pricing() {
                                 Payments available on:
                                 <span className="inline-flex items-center gap-2 ml-2">
                                     <span className="text-white bg-[#CC5DF9] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#CC5DF9] font-bold">₿</span>
-                                    <span className="text-white bg-[#CC5DF9] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#CC5DF9] font-bold">$</span>
                                     <span className="text-white bg-[#CC5DF9] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#CC5DF9] font-bold">₦</span>
                                 </span>
                             </p>
@@ -293,7 +445,6 @@ export default function Pricing() {
                                 Payments available on:
                                 <span className="inline-flex items-center gap-2 ml-2">
                                     <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">₿</span>
-                                    <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">$</span>
                                     <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">₦</span>
                                 </span>
                             </p>
@@ -395,7 +546,6 @@ export default function Pricing() {
                                 Payments available on:
                                 <span className="inline-flex items-center gap-2 ml-2">
                                     <span className="text-white bg-[#FF8513] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#FF8513] font-bold">₿</span>
-                                    <span className="text-white bg-[#FF8513] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#FF8513] font-bold">$</span>
                                     <span className="text-white bg-[#FF8513] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#FF8513] font-bold">₦</span>
                                 </span>
                             </p>
@@ -470,32 +620,32 @@ export default function Pricing() {
                 <div className="bg-[#CED8DD] pt-[40px] md:pt-[55px] px-[30px] md:px-[38px] pb-[30px] md:pb-[60px] border-5 border-[#ffff] text-[#091B25] mt-[35px] rounded-[30px]">
                     <div className="flex gap-[0px] flex-col lg:flex-row">
                         <div>
-                            <h3 className="text-[22px] md:text-[28px] font-bold">Premium Signals</h3>
+                            <h3 className="text-[22px] md:text-[28px] text-[#AD6500] font-bold">Premium Signals</h3>
                             <p className="text-[14px] md:text-[16px]">Minimum 1:5 Risk-to-Reward ratio</p>
                             <div className="grid grid-cols-1 lg:grid-cols-2 mt-[20px] md:mt-[50px] gap-[20px]">
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
                                     </svg>
                                     </span>
                                     2-5 high-quality signals per week
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
                                     </svg>
                                     </span>
                                     Weekly target: 1,000 - 3,000 pips
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
                                     </svg>
                                     </span>
                                     Instruments traded: BTC/USD & XAU/USD
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
                                     </svg>
                                     </span>
@@ -505,25 +655,24 @@ export default function Pricing() {
 
                         </div>
                         <div className="">
-                            <div className="pl-0 lg:pl-[86px] mt-[20px] lg:mt-0" style={{
+                            <div className="pl-0 lg:pl-[46px] mt-[20px] lg:mt-0" style={{
                                 borderBottom: "3px solid #091B25"
                             }}>
-                                <h3 className="text-[28px] md:text-[36px] font-extrabold">$100 <span className="text-[16px] font-normal">/monthly</span></h3>
+                                <h3 className="text-[28px] md:text-[36px] text-[#AD6500] font-extrabold">$100 <span className="text-[16px] text-[#091B25] font-normal">/monthly</span></h3>
                             </div>
                             {/* <!-- Payments --> */}
                             <p className="text-[14px] font-bold text-[#091B25] pt-[14px] pb-[30px]">
                                 Payments available on:
                                 <span className="inline-flex items-center gap-2 ml-2">
-                                    <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">₿</span>
-                                    <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">$</span>
-                                    <span className="text-white bg-[#091B25] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#091B25] font-bold">₦</span>
+                                    <span className="text-white bg-[#AD6500] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#AD6500] font-bold">₿</span>
+                                    <span className="text-white bg-[#AD6500] w-[25px] h-[25px] flex justify-center items-center rounded-full text-[16px] bg-[#AD6500] font-bold">₦</span>
                                 </span>
                             </p>
                             <div className="flex items-end justify-start lg:justify-end">
                                 {/* <!-- Button --> */}
                                 <button
                                     onClick={() => openModal("Premium Signals")}
-                                    className="mt-auto px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md bg-[#091B25] rounded-full text-[#ffff] font-medium cursor-pointer"
+                                    className="mt-auto px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md bg-[#AD6500] rounded-full text-[#ffff] font-medium cursor-pointer"
                                 >
                                     Get Started
                                 </button>
@@ -546,7 +695,7 @@ export default function Pricing() {
                     <div className="relative mx-auto w-[92%] max-w-[600px] max-h-[85vh] overflow-y-auto rounded-[30px] bg-white px-[20px] py-[24px] md:px-[40px] md:py-[36px] shadow-2xl">
                         <div className="flex items-start justify-between gap-6">
                             <div>
-                                <h3 className="text-[24px] md:text-[28px] font-semibold text-[#091B25]">Let’s start with your details</h3>
+                                <h3 className="text-[24px] md:text-[28px] font-semibold text-[#091B25]">Let&apos;s start with your details</h3>
                                 <p className="text-[14px] md:text-[16px] text-[#535862] pt-[6px]">Provide essential information to proceed.</p>
                             </div>
                             <button
@@ -608,15 +757,33 @@ export default function Pricing() {
                                     value={paymentOption}
                                     onChange={(e) => {
                                         setProceedError(null);
-                                        setPaymentOption(e.target.value as "USD" | "Naira" | "Crypto");
+                                        setPaymentOption(e.target.value as "Naira" | "Crypto");
                                     }}
                                     className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none bg-white"
                                 >
-                                    <option value="USD">USD</option>
                                     <option value="Naira">Naira</option>
                                     <option value="Crypto">Crypto</option>
                                 </select>
                             </div>
+
+                            {paymentOption === "Crypto" && (
+                                <div>
+                                    <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Select Coin</label>
+                                    <select
+                                        value={cryptoCoin}
+                                        onChange={(e) => {
+                                            setProceedError(null);
+                                            setCryptoCoin(e.target.value as "BTC" | "BNB" | "LTC" | "USDT");
+                                        }}
+                                        className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none bg-white"
+                                    >
+                                        <option value="BTC">BTC</option>
+                                        <option value="BNB">BNB</option>
+                                        <option value="LTC">LTC</option>
+                                        <option value="USDT">USDT</option>
+                                    </select>
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Location</label>
@@ -646,7 +813,7 @@ export default function Pricing() {
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="rounded-full bg-[#EAF0F3] px-[16px] py-[8px] text-[12px] font-medium text-[#091B25]"
+                                    className="rounded-full bg-[#EAF0F3] px-5 py-2 text-[12px] font-medium text-[#091B25]"
                                 >
                                     Change plan
                                 </button>
@@ -667,14 +834,123 @@ export default function Pricing() {
                                         canProceed ? "" : "opacity-50 cursor-not-allowed"
                                     }`}
                                 >
-                                    {isProceeding ? "Processing..." : "Proceed"}
+                                    {isProceeding ? "Processing..." : paymentOption === "Crypto" ? "Generate Wallet" : "Proceed"}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
+
+            {cryptoCheckout && (
+                <div className="fixed inset-0 z-[1700] flex items-center justify-center overflow-hidden">
+                    <button
+                        type="button"
+                        aria-label="Close crypto checkout"
+                        onClick={() => setCryptoCheckout(null)}
+                        className="absolute inset-0 bg-black/60"
+                    />
+
+                    <div className="relative mx-auto w-[92%] max-w-[560px] rounded-[24px] bg-white px-[20px] py-[22px] md:px-[28px] md:py-[28px] shadow-2xl">
+                        <div className="flex items-start justify-between gap-6">
+                            <div>
+                                <h3 className="text-[20px] md:text-[22px] font-semibold text-[#091B25]">Crypto Payment Wallet</h3>
+                                <p className="text-[14px] text-[#535862] pt-[6px]">
+                                    {typeof cryptoSecondsLeft === "number" && cryptoSecondsLeft <= 0
+                                        ? "Wallet expired. Please generate a new wallet to continue."
+                                        : "Send exactly the amount below to complete your payment. This wallet expires in 20 minutes."}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                aria-label="Close"
+                                onClick={() => setCryptoCheckout(null)}
+                                className="w-[40px] h-[40px] rounded-full border border-[#E4E7EC] flex items-center justify-center text-[#091B25]"
+                            >
+                                <span className="text-[20px] leading-none">×</span>
+                            </button>
+                        </div>
+
+                        {typeof cryptoSecondsLeft === "number" && cryptoSecondsLeft <= 0 ? (
+                            <div className="pt-[18px]">
+                                <div className="rounded-[16px] border border-[#EAECF0] bg-[#F9FAFB] p-[16px]">
+                                    <p className="text-[14px] font-semibold text-[#091B25]">Wallet expired</p>
+                                    <p className="pt-[6px] text-[13px] text-[#535862]">Generate a new wallet to continue your crypto payment.</p>
+                                    <div className="pt-[14px]">
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                setCryptoCheckout(null);
+                                                setCryptoPaymentStatus(null);
+                                                await handleProceed();
+                                            }}
+                                            className="rounded-full bg-[#091B25] px-6 py-2 text-[13px] font-semibold text-white"
+                                        >
+                                            Generate New Wallet
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="pt-[18px] grid grid-cols-1 md:grid-cols-2 gap-[16px]">
+                                <div className="rounded-[16px] border border-[#EAECF0] bg-[#F9FAFB] p-[14px]">
+                                    <p className="text-[12px] font-semibold text-[#091B25]">Amount</p>
+                                    <p className="pt-[6px] text-[18px] font-bold text-[#091B25]">
+                                        {cryptoCheckout.payAmount} {cryptoCheckout.payCurrency}
+                                    </p>
+                                    <p className="pt-[10px] text-[12px] text-[#535862]">
+                                        {typeof cryptoSecondsLeft === "number"
+                                            ? `Expires in ${Math.floor(cryptoSecondsLeft / 60)}:${String(cryptoSecondsLeft % 60).padStart(2, "0")}`
+                                            : ""}
+                                    </p>
+                                    {(cryptoPaymentStatus || isPollingCryptoStatus) && (
+                                        <p className="pt-[10px] text-[12px] text-[#535862]">
+                                            Status: {cryptoPaymentStatus ?? "checking..."}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="rounded-[16px] border border-[#EAECF0] bg-white p-[14px] flex items-center justify-center">
+                                    <img
+                                        alt="Wallet QR"
+                                        className="h-[170px] w-[170px]"
+                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(
+                                            `${cryptoCheckout.payCurrency}:${cryptoCheckout.payAddress}`
+                                        )}`}
+                                    />
+                                </div>
+
+                                <div className="md:col-span-2 rounded-[16px] border border-[#EAECF0] bg-white p-[14px]">
+                                    <p className="text-[12px] font-semibold text-[#091B25]">Wallet Address</p>
+                                    <p className="pt-[6px] text-[13px] text-[#091B25] break-all">{cryptoCheckout.payAddress}</p>
+                                    <div className="pt-[12px] flex flex-wrap gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                await navigator.clipboard.writeText(cryptoCheckout.payAddress);
+                                            }}
+                                            className="rounded-full bg-[#091B25] px-5 py-2 text-[13px] font-semibold text-white"
+                                        >
+                                            Copy Address
+                                        </button>
+                                        <a
+                                            href={`https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(
+                                                `${cryptoCheckout.payCurrency}:${cryptoCheckout.payAddress}`
+                                            )}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="rounded-full border border-[#091B25] px-5 py-2 text-[13px] font-semibold text-[#091B25]"
+                                        >
+                                            Open QR
+                                        </a>
+                                    </div>
+                                    <p className="pt-[10px] text-[12px] text-[#535862]">Payment ID: {cryptoCheckout.paymentId}</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </section>
     );
-
 }
