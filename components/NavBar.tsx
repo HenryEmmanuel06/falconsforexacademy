@@ -9,6 +9,14 @@ export default function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const isActiveHref = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const linkClassName = (href: string) =>
+    `hover:text-zinc-900${isActiveHref(href) ? " underline underline-offset-8 decoration-2" : ""}`;
+
   const handleScrollToTestimonials = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== "/") return;
 
@@ -39,22 +47,22 @@ export default function NavBar() {
         <nav className="hidden lg:flex items-center flex-1 pr-[40px] justify-end">
           <ul className="flex items-center justify-center  gap-8 text-md text-[#091B25] font-semibold">
             <li>
-              <Link href="/" className="hover:text-zinc-900">Home</Link>
+              <Link href="/" className={linkClassName("/")}>Home</Link>
             </li>
             <li>
-              <Link href="/about" className="hover:text-zinc-900">About</Link>
+              <Link href="/about" className={linkClassName("/about")}>About</Link>
             </li>
             <li>
-              <Link href="/pricing" className="hover:text-zinc-900">Pricing</Link>
+              <Link href="/pricing" className={linkClassName("/pricing")}>Pricing</Link>
             </li>
             <li>
               <Link href="/#testimonials" className="hover:text-zinc-900" onClick={handleScrollToTestimonials}>Testimonies</Link>
             </li>
             <li>
-              <Link href="/blogs" className="hover:text-zinc-900">Blogs</Link>
+              <Link href="/blogs" className={linkClassName("/blogs")}>Blogs</Link>
             </li>
              <li>
-              <Link href="/contact" className="hover:text-zinc-900">Contact</Link>
+              <Link href="/contact" className={linkClassName("/contact")}>Contact</Link>
             </li>
           </ul>
         </nav>
@@ -90,7 +98,7 @@ export default function NavBar() {
                 <li>
                   <Link 
                     href="/" 
-                    className="hover:text-zinc-900 block py-2"
+                    className={`${linkClassName("/")} block py-2`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Home
@@ -99,7 +107,7 @@ export default function NavBar() {
                 <li>
                   <Link 
                     href="/about" 
-                    className="hover:text-zinc-900 block py-2"
+                    className={`${linkClassName("/about")} block py-2`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     About
@@ -108,7 +116,7 @@ export default function NavBar() {
                 <li>
                   <Link 
                     href="/pricing" 
-                    className="hover:text-zinc-900 block py-2"
+                    className={`${linkClassName("/pricing")} block py-2`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Pricing
@@ -126,7 +134,7 @@ export default function NavBar() {
                 <li>
                   <Link 
                     href="/blogs" 
-                    className="hover:text-zinc-900 block py-2"
+                    className={`${linkClassName("/blogs")} block py-2`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Blogs
@@ -134,8 +142,8 @@ export default function NavBar() {
                 </li>
                   <li>
                   <Link 
-                    href="/blogs" 
-                    className="hover:text-zinc-900 block py-2"
+                    href="/contact" 
+                    className={`${linkClassName("/contact")} block py-2`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Contact

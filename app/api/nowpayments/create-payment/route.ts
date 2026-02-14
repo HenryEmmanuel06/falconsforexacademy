@@ -9,6 +9,20 @@ type CreateCryptoPaymentBody = {
     payCurrency?: "BTC" | "BNB" | "LTC" | "USDT";
 };
 
+function toNowpaymentsPayCurrency(payCurrency: CreateCryptoPaymentBody["payCurrency"]) {
+    switch (payCurrency) {
+        case "BNB":
+            return "BNBBSC";
+        case "USDT":
+            return "USDTTRC20";
+        case "LTC":
+            return "LTC";
+        case "BTC":
+        default:
+            return "BTC";
+    }
+}
+
 const PLAN_AMOUNTS_USD: Record<string, number> = {
     "1 Month Plan": 150,
     "3 Months Plan": 250,
@@ -35,6 +49,7 @@ export async function POST(req: Request) {
         const plan = body.plan?.trim();
         const location = body.location?.trim() ?? "";
         const payCurrency = body.payCurrency ?? "BTC";
+        const nowpaymentsPayCurrency = toNowpaymentsPayCurrency(payCurrency);
 
         if (!email) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -61,7 +76,7 @@ export async function POST(req: Request) {
             body: JSON.stringify({
                 price_amount: amountUsd,
                 price_currency: "usd",
-                pay_currency: payCurrency,
+                pay_currency: nowpaymentsPayCurrency,
                 order_id: orderId,
                 order_description: `${plan} - FalconsForexAcademy`,
             }),
@@ -97,7 +112,7 @@ export async function POST(req: Request) {
             location,
             plan,
             price_amount_usd: amountUsd,
-            pay_currency: payCurrencyResp ?? payCurrency,
+            pay_currency: payCurrencyResp ?? nowpaymentsPayCurrency,
             pay_amount: payAmount,
             pay_address: payAddress,
             nowpayments_payment_id: paymentId,
@@ -117,7 +132,7 @@ export async function POST(req: Request) {
             paymentId,
             payAddress,
             payAmount,
-            payCurrency: payCurrencyResp ?? payCurrency,
+            payCurrency: payCurrencyResp ?? nowpaymentsPayCurrency,
             expiresAt,
         });
     } catch (error) {
