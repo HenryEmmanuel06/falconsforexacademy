@@ -118,13 +118,13 @@ export default function FalconsAdminLayout({ children }: { children: React.React
                     <div className="mt-3 flex gap-3">
                         <Link
                             href="/falconsadmin/dashboard"
-                            className={`text-sm font-medium ${isActive("/falconsadmin/dashboard") ? "underline" : ""}`}
+                            className={`text-sm font-medium text-[#091B25] ${isActive("/falconsadmin/dashboard") ? "underline" : ""}`}
                         >
                             Blogs
                         </Link>
                         <Link
                             href="/falconsadmin/payments"
-                            className={`text-sm font-medium ${isActive("/falconsadmin/payments") ? "underline" : ""}`}
+                            className={`text-sm font-medium text-[#091B25] ${isActive("/falconsadmin/payments") ? "underline" : ""}`}
                         >
                             Payments
                         </Link>
