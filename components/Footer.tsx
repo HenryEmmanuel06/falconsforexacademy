@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+    const pathname = usePathname();
+    if (pathname.startsWith("/falconsadmin")) return null;
+
     return (
         <footer className="bg-[#091B25] pt-[80px] pb-[30px]">
             <div className="container">

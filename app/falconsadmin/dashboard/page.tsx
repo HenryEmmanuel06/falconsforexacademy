@@ -1,35 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import BlogList from "@/components/admin/BlogList";
 import { supabase } from "@/lib/supabase";
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [blogCount, setBlogCount] = useState<number>(0);
+  const [nairaPaymentsCount, setNairaPaymentsCount] = useState<number>(0);
+  const [cryptoPaymentsCount, setCryptoPaymentsCount] = useState<number>(0);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        router.push("/falconsadmin/login");
-        return;
+    const loadCounts = async () => {
+      try {
+        const [{ count: blogs }, { count: naira }, { count: crypto }] = await Promise.all([
+          supabase.from("blogs").select("id", { count: "exact", head: true }),
+          supabase.from("naira_payments").select("id", { count: "exact", head: true }),
+          supabase.from("crypto_payments").select("id", { count: "exact", head: true }),
+        ]);
+
+        setBlogCount(blogs ?? 0);
+        setNairaPaymentsCount(naira ?? 0);
+        setCryptoPaymentsCount(crypto ?? 0);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    checkAuth();
-  }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      router.push("/falconsadmin/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+    loadCounts();
+  }, []);
 
   if (loading) {
     return (
@@ -40,40 +39,30 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <a
-                href="/"
-                className="text-gray-500 hover:text-gray-700"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Site
-              </a>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-600 mt-1">Overview of your content and payments.</p>
+      </div>
 
-      {/* Main content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <BlogList />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <p className="text-sm text-gray-600">Total Blogs</p>
+          <p className="mt-2 text-3xl font-semibold text-gray-900">{blogCount}</p>
         </div>
-      </main>
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <p className="text-sm text-gray-600">Naira Payments</p>
+          <p className="mt-2 text-3xl font-semibold text-gray-900">{nairaPaymentsCount}</p>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <p className="text-sm text-gray-600">Crypto Payments</p>
+          <p className="mt-2 text-3xl font-semibold text-gray-900">{cryptoPaymentsCount}</p>
+        </div>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6">
+        <BlogList />
+      </div>
     </div>
   );
 }
