@@ -80,7 +80,7 @@ export default function BlogList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-[20px] md:gap-[0px] md:items-center">
         <h2 className="text-2xl font-bold text-gray-900">Blog Management</h2>
         <button
           onClick={() => {
