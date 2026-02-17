@@ -20,7 +20,7 @@ export default function OurProcess() {
                         <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-white font-medium leading-tight max-w-[540px] pt-[30px]">Follow Through These Steps To Join Us Now And Start Winning The Market</h2>
                         <div className="mt-[30px]">
                                 <Link
-                                    href="/join"
+                                    href="https://one.exnesstrack.org/a/0cdcaaie18"
                                     className="inline-flex border-1 items-center justify-center border-white gap-2 rounded-[30px] bg-[#9CB0BB] px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md text-[#091B25] font-semibold hover:bg-zinc-300"
                                 >
                                     <span>Sign up for free now</span>

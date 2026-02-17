@@ -9,7 +9,7 @@ export default function Telegram() {
                 }}>
                     <h2 className="text-center text-[28px] md:text-[32px] lg:text-[40px] font-bold text-black">Join Our Community Of Winning Traders</h2>
                     <div className="text-center mt-[40px]">
-                        <Link href="/" className="text-[14px] md:text-[16px] px-[20px] py-[12px] font-semibold text-white bg-[#AD6500] py-[16px] px-[28px] rounded-[30px]">
+                        <Link href="https://t.me/falconsforexacademy" className="text-[14px] md:text-[16px] px-[20px] py-[12px] font-semibold text-white bg-[#AD6500] py-[16px] px-[28px] rounded-[30px]">
                         Join Telegram Channel
                         </Link>
                     </div>
