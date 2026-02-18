@@ -6,8 +6,8 @@ export default function HeroSection() {
         <>
             <section className="bg-white">
                 <div className="container">
-                    <div className="flex lg:flex-row flex-col justify-between py-[40px] md:pt-[50px] md:pb-[74px] gap-[40px] lg:gap-[96px]">
-                        <div className="items-center flex w-[100%] max-w-[540px]">
+                    <div className="flex lg:flex-row flex-col justify-between py-[40px] md:pt-[50px] md:pb-[74px] gap-[40px] lg:gap-[46px]">
+                        <div className="items-center flex w-[100%]">
                             <div>
                                 <div className="inline-flex border border-[#D5D7DA] border-1 py-[7px] px-[15px] gap-[6px] rounded-[5px]">
                                     <Image
@@ -41,13 +41,20 @@ export default function HeroSection() {
                                 </div>
                             </div>
                         </div>
+<div className="hidden lg:block w-full h-[569px]" style={{
+    backgroundImage: "url('/images/banner-img-1.png')",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "contain"
+}}>
 
+</div>
                             <Image
-                                className="w-[100%] h-[100%]"
+                                className="w-full block lg:hidden"
                                 src="/images/banner-img-1.png"
                                 alt="banner"
-                                height={200}
-                                width={200}
+                                height={300}
+                                width={300}
                             />
                     </div>
                 </div>
