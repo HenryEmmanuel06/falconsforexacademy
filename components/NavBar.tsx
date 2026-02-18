@@ -72,7 +72,7 @@ export default function NavBar() {
         {/* Actions */}
         <div className="flex items-center gap-3">
           <Link
-            href="/login"
+            href="/pricing"
             className="hidden lg:block rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
           >
             Join Academy

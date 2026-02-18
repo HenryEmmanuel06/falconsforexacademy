@@ -208,7 +208,7 @@ export default function Testimonials() {
                 </div>
                      <div className="items-center justify-center mt-[40px] flex">
                         <Link
-                            href="/login"
+                            href="/pricing"
                             className="inline-flex lg:hidden rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
                         >
                             Enroll for training Now

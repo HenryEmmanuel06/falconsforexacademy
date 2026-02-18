@@ -15,18 +15,27 @@ export default function ScrollReveal({ children, className, amount = 0.2, delay 
     const inView = useInView(ref, { amount, once: false });
 
     return (
-        <motion.div
-            ref={ref}
-            className={className}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            variants={{
-                hidden: { opacity: 0, filter: "blur(12px)", y: 18 },
-                visible: { opacity: 1, filter: "blur(0px)", y: 0 },
-            }}
-            transition={{ duration: 0.6, ease: "easeOut", delay }}
-        >
-            {children}
+        <motion.div ref={ref} className={`relative ${className ?? ""}`.trim()}>
+            <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-10"
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+                variants={{
+                    hidden: {
+                        opacity: 1,
+                        backdropFilter: "blur(6px)",
+                    },
+                    visible: {
+                        opacity: 0,
+                        backdropFilter: "blur(0px)",
+                    },
+                }}
+                transition={{ duration: 0.3, ease: "easeOut", delay }}
+                style={{ backgroundColor: "rgba(255,255,255,0.01)" }}
+            />
+
+            <div className="relative z-0">{children}</div>
         </motion.div>
     );
 }

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import MotionOnce from "@/components/MotionOnce";
+
+
 
 export default function HeroSection() {
     return (
@@ -7,7 +10,7 @@ export default function HeroSection() {
             <section className="bg-white">
                 <div className="container">
                     <div className="flex lg:flex-row flex-col justify-between py-[40px] md:pt-[50px] md:pb-[74px] gap-[40px] lg:gap-[46px]">
-                        <div className="items-center flex w-[100%]">
+                        <MotionOnce className="fadein_bottom items-center flex w-[100%]" duration={0.8}>
                             <div>
                                 <div className="inline-flex border border-[#D5D7DA] border-1 py-[7px] px-[15px] gap-[6px] rounded-[5px]">
                                     <Image
@@ -40,28 +43,31 @@ export default function HeroSection() {
 
                                 </div>
                             </div>
-                        </div>
-<div className="hidden lg:block w-full h-[569px]" style={{
-    backgroundImage: "url('/images/banner-img-1.png')",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    backgroundSize: "contain"
-}}>
-
-</div>
-                            <Image
-                                className="w-full block lg:hidden"
-                                src="/images/banner-img-1.png"
-                                alt="banner"
-                                height={300}
-                                width={300}
+                        </MotionOnce>
+                        <MotionOnce className="fadein_right hidden lg:block w-full h-[569px]" duration={0.8}>
+                            <div
+                                className="w-full h-full"
+                                style={{
+                                    backgroundImage: "url('/images/banner-img-1.png')",
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "center",
+                                    backgroundSize: "contain",
+                                }}
                             />
+                        </MotionOnce>
+                        <Image
+                            className="w-full block lg:hidden"
+                            src="/images/banner-img-1.png"
+                            alt="banner"
+                            height={300}
+                            width={300}
+                        />
                     </div>
                 </div>
             </section>
             <div className="bg-[#091B25] text-white py-[60px]">
                 <div className="container">
-                    <div className="flex flex-col lg:flex-row justify-between items-center gap-[20px]">
+                    <MotionOnce className="fadein_up flex flex-col lg:flex-row justify-between items-center gap-[20px]" duration={0.8}>
                         <div>
                             <h3 className="text-[26px] md:text-[32px] text-center lg:text-left font-semibold">Our top recognized broker</h3>
                         </div>
@@ -89,7 +95,7 @@ export default function HeroSection() {
                                 </Link>
                             </div>
                         </div>
-                    </div>
+                    </MotionOnce>
                 </div>
             </div>
         </>

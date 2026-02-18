@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import MotionOnce from "./MotionOnce";
 
 export default function Pricing() {
     const router = useRouter();
@@ -318,7 +319,7 @@ export default function Pricing() {
                 <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-center text-white font-medium">Simple, Transparent Pricing</h2>
                 <p className="text-[18px] md:text-[20px] text-center text-white font-normal max-w-[570px] mx-auto">Whether monthly or lifetime, at Falconsforexacademy we got a program for you.</p>
                 <div className="pt-[40px] md:pt-[80px]">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[35px]">
+                    <MotionOnce className="fadein_up grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[35px]" duration={0.8}>
                         {/* <!-- Card --> */}
                         <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#CC5DF980] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.22)_0%,rgba(168,85,247,0.12)_25%,rgba(168,85,247,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
@@ -617,10 +618,10 @@ export default function Pricing() {
 
 
                         </div>
-                    </div>
+                    </MotionOnce>
                 </div>
 
-                <div className="bg-[#CED8DD] pt-[40px] md:pt-[55px] px-[30px] md:px-[38px] pb-[30px] md:pb-[60px] border-5 border-[#ffff] text-[#091B25] mt-[35px] rounded-[30px]">
+                <MotionOnce className="fadein_up bg-[#CED8DD] pt-[40px] md:pt-[55px] px-[30px] md:px-[38px] pb-[30px] md:pb-[60px] border-5 border-[#ffff] text-[#091B25] mt-[35px] rounded-[30px]" duration={0.8}>
                     <div className="flex gap-[0px] flex-col lg:flex-row">
                         <div>
                             <h3 className="text-[22px] md:text-[28px] text-[#AD6500] font-bold">Premium Signals</h3>
@@ -682,7 +683,7 @@ export default function Pricing() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </MotionOnce>
 
             </div>
 

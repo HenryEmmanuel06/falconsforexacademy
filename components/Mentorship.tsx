@@ -1,12 +1,12 @@
-import Link from "next/link";
 import Image from "next/image";
+import MotionOnce from "./MotionOnce";
 
 export default function Mentorship() {
     return (
         <section className="bg-[#9CB0BB] py-[50px] md:py-[70px] lg:py-[100px]">
             <div className="container">
                 <div className="flex flex-col lg:flex-row justify-between">
-                    <div className="">
+                    <MotionOnce className="fadein_left" duration={0.8}>
                         <div className="inline-flex bg-white border border-[#D5D7DA] border-1 py-[7px] px-[15px] gap-[6px] rounded-[5px]">
                             <Image
                                 src="/images/icons/_Dot.svg"
@@ -19,10 +19,10 @@ export default function Mentorship() {
                             <span className="text-sm font-medium text-[#414651]">Services We Offer</span>
                         </div>
                         <h2 className="text-[28px] md:text-[32px] lg:text-[40px] text-[#091B25] font-medium leading-tight pt-[20px] md:pt-[10px] max-w-[650px]">Are you just hearing about forex or you are a struggling trader?</h2>
-                    </div>
-                    <div className="flex items-center">
+                    </MotionOnce>
+                    <MotionOnce className="fadein_right flex items-center" duration={0.8}>
                         <p className="text-[16px] md:text-[18px] relative top-3 font-normal text-black max-w-[500px]">Whether monthly or lifetime, at Falconsforexacademy we got a program for you. Our philosophy is built on discipline and trust. We don't chase every candle.</p>
-                    </div>
+                    </MotionOnce>
                 </div>
 
 
@@ -31,7 +31,7 @@ export default function Mentorship() {
 
                 </div>
                 {/* cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[40px] md:mt-[80px] gap-[15px] md:gap-[35px]">
+                <MotionOnce className="fadein_up grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[40px] md:mt-[80px] gap-[15px] md:gap-[35px]" duration={0.8}>
 
                     {/* card */}
                     <div className="group bg-[#091B25] text-white px-[25px] pt-[50px] pb-[25px] rounded-[30px]">
@@ -106,7 +106,7 @@ export default function Mentorship() {
                     </div>
                     {/* card */}
 
-                </div>
+                </MotionOnce>
             </div>
 
         </section>
