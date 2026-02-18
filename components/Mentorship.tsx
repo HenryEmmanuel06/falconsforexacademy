@@ -34,23 +34,21 @@ export default function Mentorship() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[40px] md:mt-[80px] gap-[15px] md:gap-[35px]">
 
                     {/* card */}
-                    <div className="bg-[#091B25] text-white px-[25px] pt-[50px] pb-[25px] rounded-[30px]">
+                    <div className="group bg-[#091B25] text-white px-[25px] pt-[50px] pb-[25px] rounded-[30px]">
                         <div className="flex gap-2 justify-between">
                             <h3 className="text-[22px] max-w-auto lg:max-w-[310px] leading-tight font-semibold">
                                 Mastery in forex trading & analysis breakdown
                             </h3>
-                            <div className="mt-2">
+                            <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 11L11 1M11 1H1M11 1V11" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
-
-
                         </div>
 
                         <p className="text-[14px] max-w-[400px] lg:max-w-[280px] pt-[25px]">Understand how the forex market moves. We teach how to read price, spot trends, and identify good trading opportunities.</p>
-                     <Image
-                            src="/images/news_img_1.png"
+                        <Image
+                            src="/images/master1.png"
                             alt="svg"
                             width={335}
                             height={200}
@@ -59,24 +57,22 @@ export default function Mentorship() {
                     </div>
                     {/* card */}
                     {/* card */}
-                    <div className="bg-white text-[#091B25] px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
+                    <div className="group bg-white text-[#091B25] px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
                         <div className="flex gap-2 justify-between">
                             <h3 className="text-[22px] max-w-auto lg:max-w-[310px] leading-tight font-semibold">
                                 Mastering trade entry & exist principles
                             </h3>
-                            <div className="mt-2">
+                            <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 11L11 1M11 1H1M11 1V11" stroke="#091B25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
 
                             </div>
-
-
                         </div>
 
                         <p className="text-[14px] max-w-[400px] lg:max-w-[280px] pt-[25px]">Learn when to enter and exit trades with confidence. Simple rules to manage risk and protect your profits.</p>
                         <Image
-                            src="/images/news_img_2.png"
+                            src="/images/master3.png"
                             alt="svg"
                             width={335}
                             height={200}
@@ -86,24 +82,22 @@ export default function Mentorship() {
                     {/* card */}
 
                     {/* card */}
-                    <div className="bg-white text-[#091B25] md:col-span-2 lg:col-span-1 px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
+                    <div className="group bg-white text-[#091B25] md:col-span-2 lg:col-span-1 px-[25px] pt-[50px] pb-[25px] rounded-[30px] border-2 border-[#091B25]">
                         <div className="flex gap-2 justify-between">
                             <h3 className="text-[22px] max-w-auto lg:max-w-[310px] leading-tight font-semibold">
                                 Mindset development & strategy trust
                             </h3>
-                            <div className="mt-2">
+                            <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 11L11 1M11 1H1M11 1V11" stroke="#091B25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
 
                             </div>
-
-
                         </div>
 
                         <p className="text-[14px] max-w-[400px] lg:max-w-[280px] pt-[25px]">Develop the right trading mindset. Stay disciplined, control emotions, and trust your strategy as you grow.</p>
                         <Image
-                            src="/images/news_img.png"
+                            src="/images/master2.png"
                             alt="svg"
                             width={335}
                             height={200}

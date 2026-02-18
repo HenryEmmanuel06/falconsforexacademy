@@ -522,9 +522,12 @@ export default function Pricing() {
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#FF8513] mb-[20px]">
-                                <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8.78704 19.25L6.31204 14.65L1.71204 12.175L3.48704 10.425L7.11204 11.05L9.66204 8.5L1.73704 5.125L3.83704 2.975L13.462 4.675L16.562 1.575C16.9454 1.19167 17.4204 1 17.987 1C18.5537 1 19.0287 1.19167 19.412 1.575C19.7954 1.95833 19.987 2.42917 19.987 2.9875C19.987 3.54583 19.7954 4.01667 19.412 4.4L16.287 7.525L17.987 17.125L15.862 19.25L12.462 11.325L9.91204 13.875L10.562 17.475L8.78704 19.25Z" stroke="white" strokeWidth="2" />
-                                </svg>
+                                <Image 
+                                src="/images/icons/star_plan.svg"
+                                alt="star plan"
+                                width={21}
+                                height={21}
+                                />
 
 
                             </div>
