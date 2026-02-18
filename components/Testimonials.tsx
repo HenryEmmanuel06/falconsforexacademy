@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
+import MotionOnce from "./MotionOnce";
 
 export default function Testimonials() {
 
@@ -62,7 +63,7 @@ export default function Testimonials() {
     return (
         <section className="bg-white" id="testimonials">
             <div className="container py-[50px] lg:pt-[90px] lg:pb-[50px]">
-                <div className="flex flex-col lg:flex-row justify-between">
+                <MotionOnce className="fadein_bottom flex flex-col lg:flex-row justify-between" duration={0.8}>
                     <div>
                         <div className="inline-flex border border-[#D5D7DA] border-1 py-[7px] px-[15px] gap-[6px] rounded-[5px]">
                             <Image
@@ -85,11 +86,11 @@ export default function Testimonials() {
                         </Link>
                     </div>
 
-                </div>
+                </MotionOnce>
 
 
                 <div className="flex flex-col lg:flex-row pt-[30px] lg:pt-[60px] gap-[20px]">
-                    <div className="relative overflow-hidden w-[100%] lg:w-[25%] h-[292px] p-[25px] pt-[170px] text-white text-[14px] font-normal rounded-[15px]">
+                    <MotionOnce className="fadein_left relative overflow-hidden w-[100%] lg:w-[25%] h-[292px] p-[25px] pt-[170px] text-white text-[14px] font-normal rounded-[15px]" duration={0.8}>
                         <iframe
                             src="https://player.cloudinary.com/embed/?cloud_name=dddpexcfo&public_id=IMG_1719_2_yyd3be"
                             title="Testimonial video"
@@ -100,11 +101,11 @@ export default function Testimonials() {
                             style={{ border: 0 }}
                         />
 
-                    </div>
+                    </MotionOnce>
 
 
 
-                    <div className="relative w-[100%] lg:w-[50%] min-w-0 flex flex-col bg-[#F5F5F5] p-[25px] rounded-[15px] min-h-[292px] overflow-hidden">
+                    <MotionOnce className="fadein_up relative w-[100%] lg:w-[50%] min-w-0 flex flex-col bg-[#F5F5F5] p-[25px] rounded-[15px] min-h-[292px] overflow-hidden" duration={0.8}>
                         <div className="flex gap-[3px]">
                             <Image
                                 src="/images/icons/star.svg"
@@ -192,9 +193,9 @@ export default function Testimonials() {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </MotionOnce>
 
-                    <div className="w-[100%] lg:w-[25%] p-[25px] flex flex-col bg-[#181D27] text-white rounded-[15px]">
+                    <MotionOnce className="fadein_right w-[100%] lg:w-[25%] p-[25px] flex flex-col bg-[#181D27] text-white rounded-[15px]" duration={0.8}>
                         <h2 className="text-[50px] md:text-[64px] tracking-tight font-extrabold mt-auto">
                             98%
                         </h2>
@@ -204,7 +205,7 @@ export default function Testimonials() {
                         <p className="pt-[5px] text-[#EEF4FF] text-[14px]">
                             Lifetime Plan
                         </p>
-                    </div>
+                    </MotionOnce>
                 </div>
                      <div className="items-center justify-center mt-[40px] flex">
                         <Link
