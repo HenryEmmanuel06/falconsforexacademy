@@ -14,7 +14,7 @@ export default function Telegram() {
                         </Link>
                     </div>
                 </div>
-            </div>
+        </div>
     );
 
 }

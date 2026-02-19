@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import MotionOnce from "./MotionOnce";
 
 export default function Footer() {
     const pathname = usePathname();
@@ -11,7 +12,7 @@ export default function Footer() {
     return (
         <footer className="bg-[#091B25] pt-[80px] pb-[30px]">
             <div className="container">
-                <div className="flex flex-col lg:flex-row justify-between gap-[40px]">
+                <MotionOnce className="fadein_bottom flex flex-col lg:flex-row justify-between gap-[40px]" duration={0.8}>
                     <div>
                         <Image
                             src="/images/footer_logo.png"
@@ -49,11 +50,9 @@ export default function Footer() {
                         </div>
 
                     </div>
-                </div>
+                </MotionOnce>
 
-                <div className="flex flex-col lg:flex-row gap-[20px] justify-between items-center mt-[50px] lg:mt-[100px] pt-[32px]" style={{
-                        borderTop: "1px solid #FFFFFF1A"
-                }}>
+                <MotionOnce className="fadein_up flex flex-col lg:flex-row gap-[20px] justify-between items-center mt-[50px] lg:mt-[100px] pt-[32px] border-t-1 border-[#FFFFFF1A]" duration={0.8}>
                     <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Falcons reserved.</span>
                     <div className="flex gap-[24px]">
                         <Link href="/"><Image
@@ -81,7 +80,7 @@ export default function Footer() {
                         height={24}
                         /></Link>
                     </div>
-                </div>
+                </MotionOnce>
             </div>
         </footer>
     );

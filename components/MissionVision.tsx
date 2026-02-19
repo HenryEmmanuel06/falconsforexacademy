@@ -1,11 +1,11 @@
-import Link from "next/link";
 import Image from "next/image";
+import MotionOnce from "./MotionOnce";
 
 export default function MissionVision() {
     return (
             <section className="bg-white">
                 <div className="container">
-                    <div className="flex flex-col md:flex-row gap-[20px] lg:gap-[30px] pb-[40px] md:pb-[97px]">
+                    <MotionOnce className="fadein_up flex flex-col md:flex-row gap-[20px] lg:gap-[30px] pb-[40px] md:pb-[97px]" duration={0.8}>
                         <div className="text-center px-[40px] lg:px-[70px] py-[40px] bg-[#EFEFEF] rounded-[30px]">
                             <Image
                             src="/images/mission.png"
@@ -29,7 +29,7 @@ export default function MissionVision() {
                             <p className="text-black text-[16px] md:text-[18px] font-normal max-w-[480px] pt-[20px]">At Falcons Forex Academy, we strip away the noise of complex indicators and focus on pure price action and market structure. Our philosophy is built on discipline and trust. We don't chase every candle.</p>
                         </div>
 
-                    </div>
+                    </MotionOnce>
                     
 
                 </div>

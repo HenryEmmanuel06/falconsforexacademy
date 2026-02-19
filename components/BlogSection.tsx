@@ -9,6 +9,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import MotionOnce from "./MotionOnce";
 
 export default function BlogSection() {
     const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -63,7 +64,7 @@ export default function BlogSection() {
             <div className="container">
                 <h2 className="text-center text-[28px] md:text-[32px] lg:text-[40px] font-medium text-black">Amazing Contents To Keep You Informed</h2>
                 <p className="text-center text-[18px] md:text-[20px] max-w-[858px] mx-auto text-black">Stay updated with the latest forex trading strategies and market insights from our expert team.</p>
-                <div className="pt-[55px]">
+                <MotionOnce className="fadein_up pt-[55px]" duration={0.8}>
                     {fetchError ? (
                         <div className="text-center py-12 mx-auto">
                             <p className="text-gray-500">Unable to load blogs.</p>
@@ -139,7 +140,7 @@ export default function BlogSection() {
                             <div className="blog-pagination mt-9 flex justify-center" />
                         </div>
                     )}
-                </div>
+                </MotionOnce>
             </div>
         </section>
     );

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import MotionOnce from "./MotionOnce";
 
 export default function OurProcess() {
     return (
         <section className="bg-[#091B25] py-[90px]">
             <div className="container">
                 <div className="flex flex-col xl:flex-row gap-[95px]">
-                    <div>
+                    <MotionOnce className="fadein_left" duration={0.8}>
                         <div className="inline-flex border border-[#D5D7DA] bg-white border-1 py-[7px] px-[15px] gap-[6px] rounded-[5px]">
                             <Image
                                 src="/images/icons/_Dot.svg"
@@ -31,9 +32,9 @@ export default function OurProcess() {
                                 </Link>
                         </div>
                        
-                    </div>
+                    </MotionOnce>
 
-                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-[50px]">
+                    <MotionOnce className="fadein_right grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-[50px]" duration={0.8}>
                         <div className="relative text-center border border-1 border-[#9CB0BB] rounded-[30px] p-[30px] flex flex-col items-center justify-center text-white">
                             <Image 
                                  src="/images/icons/package.svg"
@@ -123,7 +124,7 @@ export default function OurProcess() {
                         </div>
 
 
-                    </div>
+                    </MotionOnce>
                 </div>
             </div>
         </section>
