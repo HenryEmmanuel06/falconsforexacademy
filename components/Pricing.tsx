@@ -16,7 +16,7 @@ export default function Pricing() {
     const [emailValidationStatus, setEmailValidationStatus] = useState<"idle" | "validating" | "valid" | "invalid">("idle");
     const [emailValidationMessage, setEmailValidationMessage] = useState<string | null>(null);
     const [paymentOption, setPaymentOption] = useState<"Naira" | "Crypto">("Naira");
-    const [cryptoCoin, setCryptoCoin] = useState<"BTC" | "BNB" | "LTC" | "USDT">("BTC");
+    const [cryptoCoin, setCryptoCoin] = useState<"BTC" | "USDT">("BTC");
     const [location, setLocation] = useState<"Kano" | "Abuja">("Abuja");
     const [isProceeding, setIsProceeding] = useState(false);
     const [proceedError, setProceedError] = useState<string | null>(null);
@@ -777,13 +777,11 @@ export default function Pricing() {
                                         value={cryptoCoin}
                                         onChange={(e) => {
                                             setProceedError(null);
-                                            setCryptoCoin(e.target.value as "BTC" | "BNB" | "LTC" | "USDT");
+                                            setCryptoCoin(e.target.value as "BTC" | "USDT");
                                         }}
                                         className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none bg-white"
                                     >
                                         <option value="BTC">BTC</option>
-                                        <option value="BNB">BNB</option>
-                                        <option value="LTC">LTC</option>
                                         <option value="USDT">USDT</option>
                                     </select>
                                 </div>
