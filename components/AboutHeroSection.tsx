@@ -26,13 +26,13 @@ export default function AboutHeroSection() {
 
                             <div className="flex items-center gap-3 pt-[25px] md:pt-[36px]">
                                 <Link
-                                    href="/join"
+                                    href="https://t.me/falconsforexacademy"
                                     className="rounded-[30px] bg-[#9CB0BB] px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md text-[#091B25] font-semibold hover:bg-zinc-300"
                                 >
                                     Join Academy
                                 </Link>
                                 <Link
-                                    href="/login"
+                                    href="/pricing"
                                     className="rounded-[30px] bg-[#091B25] px-[20px] py-[12px] text-sm md:px-[28px] md:py-[16px] md:text-md font-semibold text-white hover:bg-zinc-800"
                                 >
                                     Enroll for training Now
