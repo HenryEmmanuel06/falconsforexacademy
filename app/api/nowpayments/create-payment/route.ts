@@ -4,19 +4,16 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 type CreateCryptoPaymentBody = {
     email?: string;
     fullName?: string;
+    phoneNumber?: string;
     plan?: string;
     location?: string;
-    payCurrency?: "BTC" | "BNB" | "LTC" | "USDT";
+    payCurrency?: "BTC" | "USDT";
 };
 
 function toNowpaymentsPayCurrency(payCurrency: CreateCryptoPaymentBody["payCurrency"]) {
     switch (payCurrency) {
-        case "BNB":
-            return "BNBBSC";
         case "USDT":
             return "USDTTRC20";
-        case "LTC":
-            return "LTC";
         case "BTC":
         default:
             return "BTC";
@@ -46,6 +43,7 @@ export async function POST(req: Request) {
         const body = (await req.json()) as CreateCryptoPaymentBody;
         const email = body.email?.trim();
         const fullName = body.fullName?.trim() ?? "";
+        const phoneNumber = body.phoneNumber?.trim() ?? "";
         const plan = body.plan?.trim();
         const location = body.location?.trim() ?? "";
         const payCurrency = body.payCurrency ?? "BTC";
@@ -57,6 +55,10 @@ export async function POST(req: Request) {
 
         if (!plan) {
             return NextResponse.json({ error: "Plan is required" }, { status: 400 });
+        }
+
+        if (!/^\d{11}$/.test(phoneNumber)) {
+            return NextResponse.json({ error: "Phone number must be exactly 11 digits" }, { status: 400 });
         }
 
         const amountUsd = PLAN_AMOUNTS_USD[plan];
@@ -109,6 +111,7 @@ export async function POST(req: Request) {
         const { error: insertError } = await supabaseAdmin.from("crypto_payments").insert({
             full_name: fullName,
             email,
+            phone_number: phoneNumber,
             location,
             plan,
             price_amount_usd: amountUsd,

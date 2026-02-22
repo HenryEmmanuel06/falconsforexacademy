@@ -18,9 +18,7 @@ export default function Home() {
     <ScrollReveal>
       <Mentorship />
     </ScrollReveal>
-    <ScrollReveal>
       <Pricing />
-    </ScrollReveal>
     <ScrollReveal>
       <Testimonials />
     </ScrollReveal>

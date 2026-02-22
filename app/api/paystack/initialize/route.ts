@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 type InitializeRequestBody = {
     email?: string;
     fullName?: string;
+    phoneNumber?: string;
     plan?: string;
     location?: string;
     paymentOption?: "Naira" | "Crypto";
@@ -36,6 +37,7 @@ export async function POST(req: Request) {
         const plan = body.plan?.trim();
         const paymentOption = body.paymentOption ?? "Naira";
         const fullName = body.fullName?.trim() ?? "";
+        const phoneNumber = body.phoneNumber?.trim() ?? "";
         const location = body.location?.trim() ?? "";
 
         if (!email) {
@@ -44,6 +46,10 @@ export async function POST(req: Request) {
 
         if (!plan) {
             return NextResponse.json({ error: "Plan is required" }, { status: 400 });
+        }
+
+        if (!/^\d{11}$/.test(phoneNumber)) {
+            return NextResponse.json({ error: "Phone number must be exactly 11 digits" }, { status: 400 });
         }
 
         const amountUsd = PLAN_AMOUNTS_USD[plan];
@@ -71,6 +77,7 @@ export async function POST(req: Request) {
                 callback_url: callbackUrl,
                 metadata: {
                     fullName: body.fullName ?? "",
+                    phoneNumber,
                     plan,
                     location: body.location ?? "",
                     paymentOption,
@@ -105,6 +112,7 @@ export async function POST(req: Request) {
         const { error: insertError } = await supabaseAdmin.from("naira_payments").insert({
             full_name: fullName,
             email,
+            phone_number: phoneNumber,
             location,
             payment_type: "Naira",
             plan,

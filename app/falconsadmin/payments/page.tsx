@@ -7,6 +7,7 @@ type NairaPaymentRow = {
     id: string;
     full_name: string | null;
     email: string | null;
+    phone_number: string | null;
     location: string | null;
     payment_type: string | null;
     amount_ngn: number | null;
@@ -18,6 +19,7 @@ type CryptoPaymentRow = {
     id: string;
     full_name: string | null;
     email: string | null;
+    phone_number: string | null;
     location: string | null;
     price_amount_usd: number | null;
     pay_currency: string | null;
@@ -31,6 +33,7 @@ type UnifiedPaymentRow = {
     id: string;
     created_at: string;
     email: string | null;
+    phone_number: string | null;
     full_name: string | null;
     location: string | null;
     status: string | null;
@@ -52,12 +55,12 @@ export default function AdminPaymentsPage() {
                 const [nairaRes, cryptoRes] = await Promise.all([
                     supabase
                         .from("naira_payments")
-                        .select("id, full_name, email, location, payment_type, amount_ngn, status, created_at")
+                        .select("id, full_name, email, phone_number, location, payment_type, amount_ngn, status, created_at")
                         .order("created_at", { ascending: false })
                         .limit(500),
                     supabase
                         .from("crypto_payments")
-                        .select("id, full_name, email, location, price_amount_usd, pay_currency, pay_amount, status, created_at")
+                        .select("id, full_name, email, phone_number, location, price_amount_usd, pay_currency, pay_amount, status, created_at")
                         .order("created_at", { ascending: false })
                         .limit(500),
                 ]);
@@ -94,6 +97,7 @@ export default function AdminPaymentsPage() {
                 id: p.id,
                 created_at: p.created_at,
                 email: p.email,
+                phone_number: p.phone_number,
                 full_name: p.full_name,
                 location: p.location,
                 status: p.status,
@@ -114,6 +118,7 @@ export default function AdminPaymentsPage() {
                 id: p.id,
                 created_at: p.created_at,
                 email: p.email,
+                phone_number: p.phone_number,
                 full_name: p.full_name,
                 location: p.location,
                 status: p.status,
@@ -193,6 +198,9 @@ export default function AdminPaymentsPage() {
                                         Email
                                     </th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Phone
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Location
                                     </th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -216,6 +224,7 @@ export default function AdminPaymentsPage() {
                                             <div className="font-medium text-gray-900">{p.full_name || "—"}</div>
                                         </td>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{p.email || "—"}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{p.phone_number || "—"}</td>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{p.location || "—"}</td>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{p.paymentType}</td>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{p.amount}</td>

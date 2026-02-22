@@ -13,6 +13,7 @@ export default function Pricing() {
     const [selectedPlan, setSelectedPlan] = useState<string>("1 Month Plan");
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [emailValidationStatus, setEmailValidationStatus] = useState<"idle" | "validating" | "valid" | "invalid">("idle");
     const [emailValidationMessage, setEmailValidationMessage] = useState<string | null>(null);
     const [paymentOption, setPaymentOption] = useState<"Naira" | "Crypto">("Naira");
@@ -50,11 +51,12 @@ export default function Pricing() {
     const isFormFilled = useMemo(() => {
         if (!fullName.trim()) return false;
         if (!email.trim()) return false;
+        if (!phoneNumber.trim()) return false;
         if (!selectedPlan.trim()) return false;
         if (!location.trim()) return false;
         if (!paymentOption.trim()) return false;
         return true;
-    }, [email, fullName, location, paymentOption, selectedPlan]);
+    }, [email, fullName, location, paymentOption, phoneNumber, selectedPlan]);
 
     const canProceed = useMemo(() => {
         return isFormFilled && emailValidationStatus === "valid" && !isProceeding;
@@ -73,6 +75,11 @@ export default function Pricing() {
             return;
         }
 
+        if (!/^\d{11}$/.test(phoneNumber)) {
+            setProceedError("Phone number must be exactly 11 digits");
+            return;
+        }
+
         try {
             setIsProceeding(true);
 
@@ -85,6 +92,7 @@ export default function Pricing() {
                     body: JSON.stringify({
                         email,
                         fullName,
+                        phoneNumber,
                         plan: selectedPlan,
                         location,
                         payCurrency: cryptoCoin,
@@ -119,6 +127,7 @@ export default function Pricing() {
                     body: JSON.stringify({
                         email,
                         fullName,
+                        phoneNumber,
                         plan: selectedPlan,
                         location,
                         paymentOption,
@@ -321,7 +330,7 @@ export default function Pricing() {
                 <div className="pt-[40px] md:pt-[80px]">
                     <MotionOnce className="fadein_up grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[35px]" duration={0.8}>
                         {/* <!-- Card --> */}
-                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#CC5DF980] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.22)_0%,rgba(168,85,247,0.12)_25%,rgba(168,85,247,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[15px] md:px-[30px] border-[#CC5DF980] bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.22)_0%,rgba(168,85,247,0.12)_25%,rgba(168,85,247,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#CC5DF9] mb-[20px]">
@@ -418,7 +427,7 @@ export default function Pricing() {
 
 
                         {/* <!-- Card --> */}
-                        <div className="mt-auto h-full border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="mt-auto h-full border-[5px] flex flex-col rounded-[30px] py-[40px] px-[15px] md:px-[30px] border-[#091B2580]  bg-[radial-gradient(circle_at_top_right,rgba(9,27,37,0.22)_0%,rgba(9,27,37,0.12)_25%,rgba(9,27,37,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#091B25] mb-[20px]">
@@ -519,7 +528,7 @@ export default function Pricing() {
 
 
                         {/* <!-- Card --> */}
-                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[30px] border-[#FF851380] md:col-span-2 lg:col-span-1 bg-[radial-gradient(circle_at_top_right,rgba(255,133,19,0.22)_0%,rgba(255,133,19,0.12)_25%,rgba(255,133,19,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
+                        <div className="border-[5px] flex flex-col rounded-[30px] py-[40px] px-[15px] md:px-[30px] border-[#FF851380] md:col-span-2 lg:col-span-1 bg-[radial-gradient(circle_at_top_right,rgba(255,133,19,0.22)_0%,rgba(255,133,19,0.12)_25%,rgba(255,133,19,0.05)_45%,transparent_60%),linear-gradient(180deg,#ffffff_0%,#ffffff_100%)]">
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#FF8513] mb-[20px]">
@@ -706,9 +715,12 @@ export default function Pricing() {
                                 type="button"
                                 aria-label="Close modal"
                                 onClick={closeModal}
-                                className="w-[40px] h-[40px] rounded-full border border-[#E4E7EC] flex items-center justify-center text-[#091B25]"
+                                className="w-[40px] h-[40px] rounded-full border-2 border-red-600 flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white active:bg-red-700 active:border-red-700 transition-colors"
                             >
-                                <span className="text-[20px] leading-none">×</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                                    <path d="M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                                </svg>
                             </button>
                         </div>
 
@@ -755,6 +767,24 @@ export default function Pricing() {
                                 )}
                             </div>
 
+                            <div className="md:col-span-2">
+                                <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Phone Number</label>
+                                <input
+                                    value={phoneNumber}
+                                    onChange={(e) => {
+                                        setProceedError(null);
+                                        const digitsOnly = e.target.value.replace(/\D/g, "");
+                                        setPhoneNumber(digitsOnly.slice(0, 11));
+                                    }}
+                                    placeholder="Enter 11-digit phone number"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                    maxLength={11}
+                                    className="w-full rounded-[12px] border border-[#D0D5DD] px-[14px] py-[12px] text-[14px] text-[#091B25] outline-none"
+                                    required
+                                />
+                            </div>
+
                             <div>
                                 <label className="block text-[14px] font-semibold text-[#091B25] pb-[8px]">Select Payment Option</label>
                                 <select
@@ -799,7 +829,6 @@ export default function Pricing() {
                                 >
                                     <option value="Kano">Kano</option>
                                     <option value="Abuja">Abuja</option>
-
                                 </select>
                             </div>
                         </div>
@@ -867,9 +896,12 @@ export default function Pricing() {
                                 type="button"
                                 aria-label="Close"
                                 onClick={() => setCryptoCheckout(null)}
-                                className="w-[40px] h-[40px] rounded-full border border-[#E4E7EC] flex items-center justify-center text-[#091B25]"
+                                className="w-[40px] h-[40px] rounded-full border-2 border-red-600 flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white active:bg-red-700 active:border-red-700 transition-colors"
                             >
-                                <span className="text-[20px] leading-none">×</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                                    <path d="M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                                </svg>
                             </button>
                         </div>
 
