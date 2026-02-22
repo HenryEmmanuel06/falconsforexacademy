@@ -195,26 +195,29 @@ export default function Testimonials() {
                         </div>
                     </MotionOnce>
 
-                    <MotionOnce className="fadein_right w-[100%] lg:w-[25%] p-[25px] flex flex-col bg-[#181D27] text-white rounded-[15px]" duration={0.8}>
-                        <h2 className="text-[50px] md:text-[64px] tracking-tight font-extrabold mt-auto">
-                            98%
-                        </h2>
-                        <p className="font-normal text-[14px]">
-                            Sarah Harp
-                        </p>
-                        <p className="pt-[5px] text-[#EEF4FF] text-[14px]">
-                            Lifetime Plan
-                        </p>
+                    <MotionOnce
+                        className="fadein_right relative overflow-hidden w-[100%] lg:w-[25%] h-[292px] p-[25px] pt-[170px] text-white text-[14px] font-normal rounded-[15px]"
+                        duration={0.8}
+                    >
+                        <iframe
+                            src="https://player.cloudinary.com/embed/?cloud_name=dddpexcfo&public_id=WhatsApp_Video_2026-02-22_at_17.25.01_k6x2uf"
+                            title="Testimonial video"
+                            loading="lazy"
+                            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                            allowFullScreen
+                            className="absolute inset-0 h-full w-full"
+                            style={{ border: 0 }}
+                        />
                     </MotionOnce>
                 </div>
-                     <div className="items-center justify-center mt-[40px] flex">
-                        <Link
-                            href="/pricing"
-                            className="inline-flex lg:hidden rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
-                        >
-                            Enroll for training Now
-                        </Link>
-                    </div>
+                <div className="items-center justify-center mt-[40px] flex">
+                    <Link
+                        href="/pricing"
+                        className="inline-flex lg:hidden rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
+                    >
+                        Enroll for training Now
+                    </Link>
+                </div>
             </div>
         </section>
 
