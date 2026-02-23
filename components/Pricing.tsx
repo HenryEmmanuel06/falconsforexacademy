@@ -949,7 +949,7 @@ export default function Pricing() {
                                         alt="Wallet QR"
                                         className="h-[170px] w-[170px]"
                                         src={`https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(
-                                            `${cryptoCheckout.payCurrency}:${cryptoCheckout.payAddress}`
+                                            cryptoCheckout.payAddress
                                         )}`}
                                     />
                                 </div>
@@ -969,7 +969,7 @@ export default function Pricing() {
                                         </button>
                                         <a
                                             href={`https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(
-                                                `${cryptoCheckout.payCurrency}:${cryptoCheckout.payAddress}`
+                                                cryptoCheckout.payAddress
                                             )}`}
                                             target="_blank"
                                             rel="noreferrer"
