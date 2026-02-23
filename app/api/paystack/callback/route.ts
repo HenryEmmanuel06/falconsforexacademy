@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendPaymentSuccessEmail } from "@/lib/mailer";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -29,6 +30,12 @@ export async function GET(req: Request) {
                     const paidAtRaw = verifyJson.data.paid_at;
                     const paidAt = typeof paidAtRaw === "string" ? paidAtRaw : null;
 
+                    const { data: existingRow } = await supabaseAdmin
+                        .from("naira_payments")
+                        .select("status, email, full_name, plan, location")
+                        .eq("paystack_reference", reference)
+                        .maybeSingle();
+
                     const updatePayload = {
                         status: paystackStatus,
                         gateway_response: gatewayResponse,
@@ -40,6 +47,29 @@ export async function GET(req: Request) {
                         .from("naira_payments")
                         .update(updatePayload)
                         .eq("paystack_reference", reference);
+
+                    const alreadySuccess = String((existingRow as any)?.status ?? "").toLowerCase() === "success";
+                    const isSuccess = String(paystackStatus).toLowerCase() === "success";
+
+                    if (isSuccess && !alreadySuccess) {
+                        const to = String((existingRow as any)?.email ?? "").trim();
+                        const plan = String((existingRow as any)?.plan ?? "").trim();
+                        const location = String((existingRow as any)?.location ?? "").trim();
+                        const fullName = (existingRow as any)?.full_name ?? null;
+
+                        if (to && plan && location) {
+                            try {
+                                await sendPaymentSuccessEmail({
+                                    to,
+                                    fullName,
+                                    plan,
+                                    location,
+                                });
+                            } catch {
+                                // ignore email errors; payment flow should still continue
+                            }
+                        }
+                    }
                 }
             } catch {
                 // ignore verification errors; redirect still continues

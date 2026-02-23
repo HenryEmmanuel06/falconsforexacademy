@@ -1,5 +1,20 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendPaymentSuccessEmail } from "@/lib/mailer";
+
+function isNowpaymentsPaid(statusRaw: unknown, actuallyPaidRaw: unknown) {
+    const status = String(statusRaw ?? "").toLowerCase();
+    const actuallyPaid =
+        typeof actuallyPaidRaw === "number"
+            ? actuallyPaidRaw
+            : typeof actuallyPaidRaw === "string"
+              ? Number(actuallyPaidRaw)
+              : 0;
+
+    if (status === "finished") return true;
+    if (status === "confirmed" && Number.isFinite(actuallyPaid) && actuallyPaid > 0) return true;
+    return false;
+}
 
 export async function GET(req: Request) {
     try {
@@ -43,6 +58,12 @@ export async function GET(req: Request) {
         const nowpaymentsStatus = String((statusJson as any).payment_status ?? "unknown");
         const nowpaymentsPaymentId = String((statusJson as any).payment_id ?? paymentId);
 
+        const { data: beforeRow } = await supabaseAdmin
+            .from("crypto_payments")
+            .select("status, actually_paid, email, full_name, plan, location")
+            .eq("nowpayments_payment_id", nowpaymentsPaymentId)
+            .maybeSingle();
+
         const updatePayload: Record<string, any> = {
             status: nowpaymentsStatus,
             updated_at: serverNow,
@@ -62,9 +83,32 @@ export async function GET(req: Request) {
 
         const { data: dbRow } = await supabaseAdmin
             .from("crypto_payments")
-            .select("status, expires_at, actually_paid")
+            .select("status, expires_at, actually_paid, email, full_name, plan, location")
             .eq("nowpayments_payment_id", nowpaymentsPaymentId)
             .maybeSingle();
+
+        const beforePaid = isNowpaymentsPaid((beforeRow as any)?.status, (beforeRow as any)?.actually_paid);
+        const afterPaid = isNowpaymentsPaid((dbRow as any)?.status ?? nowpaymentsStatus, (dbRow as any)?.actually_paid ?? (statusJson as any).actually_paid);
+
+        if (afterPaid && !beforePaid) {
+            const to = String((dbRow as any)?.email ?? (beforeRow as any)?.email ?? "").trim();
+            const plan = String((dbRow as any)?.plan ?? (beforeRow as any)?.plan ?? "").trim();
+            const location = String((dbRow as any)?.location ?? (beforeRow as any)?.location ?? "").trim();
+            const fullName = (dbRow as any)?.full_name ?? (beforeRow as any)?.full_name ?? null;
+
+            if (to && plan && location) {
+                try {
+                    await sendPaymentSuccessEmail({
+                        to,
+                        fullName,
+                        plan,
+                        location,
+                    });
+                } catch {
+                    // ignore email errors; status polling should still work
+                }
+            }
+        }
 
         return NextResponse.json({
             paymentId: nowpaymentsPaymentId,

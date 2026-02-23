@@ -11,6 +11,15 @@ import "swiper/css";
 import "swiper/css/pagination";
 import MotionOnce from "./MotionOnce";
 
+function toBlogSlug(title: string, blogId: number | string) {
+    const slugTitle = title
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    return `${slugTitle}-${String(blogId)}`;
+}
+
 export default function BlogSection() {
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [loading, setLoading] = useState(true);
@@ -96,7 +105,7 @@ export default function BlogSection() {
                             >
                                 {blogs.map((blog) => (
                                     <SwiperSlide key={blog.id}>
-                                        <div className="group h-full cursor-pointer">
+                                        <Link href={`/blogs/${toBlogSlug(blog.blog_title, blog.blog_id)}`} className="block group h-full cursor-pointer">
                                             {blog.blog_image ? (
                                                 <Image 
                                                     src={blog.blog_image}
@@ -133,7 +142,7 @@ export default function BlogSection() {
                                                     }
                                                 </p>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </SwiperSlide>
                                 ))}
                             </Swiper>

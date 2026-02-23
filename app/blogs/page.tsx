@@ -1,9 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase, Blog } from "@/lib/supabase";
 import Telegram from "@/components/Telegram";
+
+function toBlogSlug(title: string, blogId: number | string) {
+    const slugTitle = title
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    return `${slugTitle}-${String(blogId)}`;
+}
 
 export default function BlogsPage() {
     const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -63,37 +73,40 @@ export default function BlogsPage() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {blogs.map((blog) => (
-                                    <article
+                                    <Link
                                         key={blog.id}
-                                        className="group h-full rounded-[20px] transition-colors overflow-hidden"
+                                        href={`/blogs/${toBlogSlug(blog.blog_title, blog.blog_id)}`}
+                                        className="block group h-full rounded-[20px] transition-colors overflow-hidden"
                                     >
-                                        <div className="relative w-full h-[240px] bg-gray-100">
-                                            {blog.blog_image ? (
-                                                <Image
-                                                    src={blog.blog_image}
-                                                    alt={blog.blog_title}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            ) : null}
-                                        </div>
+                                        <article>
+                                            <div className="relative w-full h-[240px] bg-gray-100">
+                                                {blog.blog_image ? (
+                                                    <Image
+                                                        src={blog.blog_image}
+                                                        alt={blog.blog_title}
+                                                        fill
+                                                        className="object-cover"
+                                                    />
+                                                ) : null}
+                                            </div>
 
-                                        <div className="p-5 pl-0">
-                                            <p className="text-[14px] font-semibold text-[#091B25]">
-                                                {blog.blog_author} • {formatDate(blog.created_at)}
-                                            </p>
+                                            <div className="p-5 pl-0">
+                                                <p className="text-[14px] font-semibold text-[#091B25]">
+                                                    {blog.blog_author} • {formatDate(blog.created_at)}
+                                                </p>
 
-                                            <h2 className="mt-3 font-semibold text-[20px] max-w-[344px] text-[#091B25]">
-                                                {blog.blog_title}
-                                            </h2>
+                                                <h2 className="mt-3 font-semibold text-[20px] max-w-[344px] text-[#091B25]">
+                                                    {blog.blog_title}
+                                                </h2>
 
-                                            <p className="mt-2 text-[16px] text-[#535862]">
-                                                {blog.blog_content.length > 120
-                                                    ? `${blog.blog_content.substring(0, 120)}...`
-                                                    : blog.blog_content}
-                                            </p>
-                                        </div>
-                                    </article>
+                                                <p className="mt-2 text-[16px] text-[#535862]">
+                                                    {blog.blog_content.length > 120
+                                                        ? `${blog.blog_content.substring(0, 120)}...`
+                                                        : blog.blog_content}
+                                                </p>
+                                            </div>
+                                        </article>
+                                    </Link>
                                 ))}
                             </div>
                         )}

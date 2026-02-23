@@ -1,6 +1,21 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendPaymentSuccessEmail } from "@/lib/mailer";
+
+function isNowpaymentsPaid(statusRaw: unknown, actuallyPaidRaw: unknown) {
+    const status = String(statusRaw ?? "").toLowerCase();
+    const actuallyPaid =
+        typeof actuallyPaidRaw === "number"
+            ? actuallyPaidRaw
+            : typeof actuallyPaidRaw === "string"
+              ? Number(actuallyPaidRaw)
+              : 0;
+
+    if (status === "finished") return true;
+    if (status === "confirmed" && Number.isFinite(actuallyPaid) && actuallyPaid > 0) return true;
+    return false;
+}
 
 function safeEqualHex(a: string, b: string) {
     const aa = Buffer.from(a, "hex");
@@ -47,6 +62,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Missing payment_id" }, { status: 400 });
     }
 
+    const { data: beforeRow } = await supabaseAdmin
+        .from("crypto_payments")
+        .select("status, actually_paid, email, full_name, plan, location")
+        .eq("nowpayments_payment_id", paymentId)
+        .maybeSingle();
+
     const updatePayload: Record<string, any> = {
         status: status ?? "unknown",
         updated_at: new Date().toISOString(),
@@ -67,6 +88,35 @@ export async function POST(req: Request) {
 
     if (updateError) {
         return NextResponse.json({ error: "Failed to update crypto payment", details: updateError.message }, { status: 500 });
+    }
+
+    const { data: afterRow } = await supabaseAdmin
+        .from("crypto_payments")
+        .select("status, actually_paid, email, full_name, plan, location")
+        .eq("nowpayments_payment_id", paymentId)
+        .maybeSingle();
+
+    const beforePaid = isNowpaymentsPaid((beforeRow as any)?.status, (beforeRow as any)?.actually_paid);
+    const afterPaid = isNowpaymentsPaid((afterRow as any)?.status ?? status, (afterRow as any)?.actually_paid ?? payload?.actually_paid);
+
+    if (afterPaid && !beforePaid) {
+        const to = String((afterRow as any)?.email ?? (beforeRow as any)?.email ?? "").trim();
+        const plan = String((afterRow as any)?.plan ?? (beforeRow as any)?.plan ?? "").trim();
+        const location = String((afterRow as any)?.location ?? (beforeRow as any)?.location ?? "").trim();
+        const fullName = (afterRow as any)?.full_name ?? (beforeRow as any)?.full_name ?? null;
+
+        if (to && plan && location) {
+            try {
+                await sendPaymentSuccessEmail({
+                    to,
+                    fullName,
+                    plan,
+                    location,
+                });
+            } catch {
+                // ignore email errors; IPN should still return ok
+            }
+        }
     }
 
     return NextResponse.json({ ok: true });
