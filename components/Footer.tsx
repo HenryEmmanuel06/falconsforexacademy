@@ -36,7 +36,7 @@ export default function Footer() {
                             <h4 className="text-[16px] font-medium">Contact</h4>
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
                                 <Link href="mailto:info@falconsforexacademy.com">info@falconsforexacademy.com</Link>
-                                <Link href="tel:+234906555596">Call: 0906555596</Link>
+                                <Link href="tel:+2348036593242">Call: +234 803 659 3242</Link>
                             </div>
                         </div>
                         <div className="text-white">
@@ -44,7 +44,6 @@ export default function Footer() {
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
                                 <Link href="/">Policy</Link>
                                 <Link href="/">Terms</Link>
-                                <Link href="/">Cookies</Link>
                             </div>
                         </div>
 
