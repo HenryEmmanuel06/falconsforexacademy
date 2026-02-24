@@ -17,7 +17,7 @@ const PLAN_AMOUNTS_USD: Record<string, number> = {
     "Premium Signals": 100,
 };
 
-const adminRate = 1480;
+const adminRate = 1340;
 
 export async function POST(req: Request) {
     try {

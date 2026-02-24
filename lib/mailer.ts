@@ -39,7 +39,11 @@ export async function sendPaymentSuccessEmail(input: PaymentSuccessEmailInput) {
 
     const nameLine = input.fullName ? `Hi ${input.fullName},` : "Hello,";
 
-    const text = `${nameLine}\n\nCongratulations! Your payment was successful.\n\nPlan: ${input.plan}\nLocation: ${input.location}\n\nThank you for choosing FalconsForexAcademy.`;
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? "";
+    const siteUrl = rawSiteUrl.trim().replace(/\/$/, "");
+    const registrationUrl = siteUrl ? `${siteUrl}/register` : "/register";
+
+    const text = `${nameLine}\n\nCongratulations! Your payment was successful.\n\nPlan: ${input.plan}\nLocation: ${input.location}\n\nTo gain full access, please complete your registration here:\n${registrationUrl}\n\nThank you for choosing FalconsForexAcademy.`;
 
     const html = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
@@ -48,6 +52,10 @@ export async function sendPaymentSuccessEmail(input: PaymentSuccessEmailInput) {
             <p>
                 <strong>Plan:</strong> ${input.plan}<br />
                 <strong>Location:</strong> ${input.location}
+            </p>
+            <p>
+                To gain full access, please complete your registration:<br />
+                <a href="${registrationUrl}" style="color:#091B25;font-weight:700;">Complete Registration</a>
             </p>
             <p>Thank you for choosing FalconsForexAcademy.</p>
         </div>

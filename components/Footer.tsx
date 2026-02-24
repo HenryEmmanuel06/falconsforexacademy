@@ -27,9 +27,9 @@ export default function Footer() {
                         <div className="text-white">
                             <h4 className="text-[16px] font-medium">Company</h4>
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
-                                <Link href="/">About</Link>
-                                <Link href="/">Blogs</Link>
-                                <Link href="/">Testimonial</Link>
+                                <Link href="/abou">About</Link>
+                                <Link href="/blogs">Blogs</Link>
+                                <Link href="#testimonial">Testimonial</Link>
                             </div>
                         </div>
                         <div className="text-white">

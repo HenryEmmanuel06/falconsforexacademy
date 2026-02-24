@@ -34,7 +34,7 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
                 <div className="container mx-auto px-6 py-16">
                     <h1 className="text-[28px] md:text-[36px] font-bold text-[#091B25]">Payment Successful</h1>
                     <p className="pt-3 text-[16px] text-[#535862]">Verifying your payment...</p>
-                    <div className="pt-8">
+                    <div className="pt-8 flex flex-wrap gap-3">
                         <Link
                             href="/"
                             className="inline-flex items-center justify-center rounded-full bg-[#091B25] px-8 py-3 text-white font-semibold"
@@ -64,14 +64,22 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
          }
 
          return (
-             <div className="bg-white">
-                 <div className="container mx-auto px-6 py-16">
-                     <h1 className="text-[28px] md:text-[36px] font-bold text-[#091B25]">Payment Successful</h1>
-                     <p className="pt-3 text-[16px] text-[#535862]">
-                         {normalized && successStatuses.has(normalized)
-                             ? "Thank you. Your payment was received successfully."
-                             : "Verifying your payment..."}
-                     </p>
+            <div className="bg-white">
+                <div className="container mx-auto px-6 py-16">
+                    <h1 className="text-[28px] md:text-[36px] font-bold text-[#091B25]">Payment Successful</h1>
+                    <p className="pt-3 text-[16px] text-[#535862]">
+                        {normalized && successStatuses.has(normalized)
+                            ? "Thank you. Your payment was received successfully."
+                            : "Verifying your payment..."}
+                    </p>
+
+                    {normalized && successStatuses.has(normalized) && (
+                        <div className="mt-6 rounded-[14px] border border-[#EAECF0] bg-[#F9FAFB] px-5 py-4">
+                            <p className="text-[14px] text-[#091B25]">
+                                Your payment was successful. Please complete your registration to gain full access.
+                            </p>
+                        </div>
+                    )}
 
                      <div className="mt-6 rounded-[14px] border border-[#EAECF0] bg-[#F9FAFB] px-5 py-4">
                          <p className="text-[14px] text-[#091B25]">
@@ -134,6 +142,14 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
                         : "Verifying your payment..."}
                 </p>
 
+                {status === "success" && (
+                    <div className="mt-6 rounded-[14px] border border-[#EAECF0] bg-[#F9FAFB] px-5 py-4">
+                        <p className="text-[14px] text-[#091B25]">
+                            Your payment was successful. Please complete your registration to gain full access.
+                        </p>
+                    </div>
+                )}
+
                 {reference && (
                     <div className="mt-6 rounded-[14px] border border-[#EAECF0] bg-[#F9FAFB] px-5 py-4">
                         <p className="text-[14px] text-[#091B25]">
@@ -142,10 +158,20 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
                     </div>
                 )}
 
-                <div className="pt-8">
+                <div className="pt-8 flex flex-wrap gap-3">
+                    {status === "success" && (
+                        <Link
+                            href="/register"
+                            className="inline-flex items-center justify-center rounded-full bg-[#091B25] px-8 py-3 text-white font-semibold"
+                        >
+                            Complete Registration
+                        </Link>
+                    )}
                     <Link
                         href="/"
-                        className="inline-flex items-center justify-center rounded-full bg-[#091B25] px-8 py-3 text-white font-semibold"
+                        className={`inline-flex items-center justify-center rounded-full px-8 py-3 font-semibold ${
+                            status === "success" ? "border border-[#091B25] text-[#091B25]" : "bg-[#091B25] text-white"
+                        }`}
                     >
                         Back to Home
                     </Link>

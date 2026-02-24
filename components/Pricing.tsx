@@ -200,6 +200,9 @@ export default function Pricing() {
                 const data = await res.json().catch(() => null);
                 if (!res.ok || !data) return;
 
+                const status = String((data as any).dbStatus ?? "unknown").toLowerCase();
+                setCryptoPaymentStatus(status);
+
                 if (data.serverNow) {
                     const serverNowMs = new Date(String(data.serverNow)).getTime();
                     if (Number.isFinite(serverNowMs)) {
@@ -214,10 +217,6 @@ export default function Pricing() {
                     }
                 }
 
-                const dbStatusRaw = data.dbStatus ?? "unknown";
-                const status = String(dbStatusRaw).toLowerCase();
-                setCryptoPaymentStatus(String(dbStatusRaw));
-
                 const actuallyPaidRaw = (data as any).actuallyPaid;
                 const actuallyPaid =
                     typeof actuallyPaidRaw === "number"
@@ -226,19 +225,34 @@ export default function Pricing() {
                             ? Number(actuallyPaidRaw)
                             : 0;
 
-                const isPaid = Number.isFinite(actuallyPaid) && actuallyPaid > 0;
+                const expectedPayAmountRaw = cryptoCheckout.payAmount;
+                const expectedPayAmount =
+                    typeof expectedPayAmountRaw === "number"
+                        ? expectedPayAmountRaw
+                        : typeof expectedPayAmountRaw === "string"
+                            ? Number(expectedPayAmountRaw)
+                            : 0;
 
-                if (status === "finished" || (status === "confirmed" && isPaid)) {
+                const isFullyPaid =
+                    Number.isFinite(actuallyPaid) &&
+                    Number.isFinite(expectedPayAmount) &&
+                    expectedPayAmount > 0 &&
+                    actuallyPaid >= expectedPayAmount;
+
+                if ((status === "finished" || status === "confirmed") && isFullyPaid) {
                     stopped = true;
                     if (intervalId) window.clearInterval(intervalId);
+                    setIsPollingCryptoStatus(false);
                     setCryptoCheckout(null);
                     router.push(`/payment/success?paymentId=${encodeURIComponent(String(cryptoCheckout.paymentId))}&provider=nowpayments`);
+                    return;
                 }
 
-                const failureStatuses = new Set(["failed", "refunded", "expired", "cancelled", "canceled"]);
+                const failureStatuses = new Set(["failed", "refunded", "expired", "cancelled", "canceled", "underpaid", "partially_paid"]);
                 if (failureStatuses.has(status)) {
                     stopped = true;
                     if (intervalId) window.clearInterval(intervalId);
+                    setIsPollingCryptoStatus(false);
                     setCryptoCheckout(null);
                     router.push(
                         `/payment/failed?paymentId=${encodeURIComponent(String(cryptoCheckout.paymentId))}&status=${encodeURIComponent(status)}&provider=nowpayments`
@@ -252,7 +266,7 @@ export default function Pricing() {
         };
 
         poll();
-        intervalId = window.setInterval(poll, 5000);
+        intervalId = window.setInterval(poll, 7000);
 
         return () => {
             stopped = true;

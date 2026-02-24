@@ -83,6 +83,16 @@ export default function FalconsAdminLayout({ children }: { children: React.React
                                 Payments
                             </Link>
                         </li>
+                        <li>
+                            <Link
+                                href="/falconsadmin/registrations"
+                                className={`block rounded-lg px-4 py-3 text-sm font-medium hover:bg-white/10 ${
+                                    isActive("/falconsadmin/registrations") ? "bg-white/10" : ""
+                                }`}
+                            >
+                                Registrations
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
 
@@ -127,6 +137,12 @@ export default function FalconsAdminLayout({ children }: { children: React.React
                             className={`text-sm font-medium text-[#091B25] ${isActive("/falconsadmin/payments") ? "underline" : ""}`}
                         >
                             Payments
+                        </Link>
+                        <Link
+                            href="/falconsadmin/registrations"
+                            className={`text-sm font-medium text-[#091B25] ${isActive("/falconsadmin/registrations") ? "underline" : ""}`}
+                        >
+                            Registrations
                         </Link>
                     </div>
                 </header>

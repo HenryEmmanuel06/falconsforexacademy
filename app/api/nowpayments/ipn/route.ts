@@ -3,18 +3,25 @@ import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { sendPaymentSuccessEmail } from "@/lib/mailer";
 
-function isNowpaymentsPaid(statusRaw: unknown, actuallyPaidRaw: unknown) {
-    const status = String(statusRaw ?? "").toLowerCase();
-    const actuallyPaid =
-        typeof actuallyPaidRaw === "number"
-            ? actuallyPaidRaw
-            : typeof actuallyPaidRaw === "string"
-              ? Number(actuallyPaidRaw)
-              : 0;
+function toNumber(value: unknown) {
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+        const num = Number(value);
+        return Number.isFinite(num) ? num : 0;
+    }
+    return 0;
+}
 
-    if (status === "finished") return true;
-    if (status === "confirmed" && Number.isFinite(actuallyPaid) && actuallyPaid > 0) return true;
-    return false;
+function computeNowpaymentsPaidStatus(statusRaw: unknown, actuallyPaidRaw: unknown, payAmountRaw: unknown) {
+    const status = String(statusRaw ?? "").toLowerCase();
+    const actuallyPaid = toNumber(actuallyPaidRaw);
+    const payAmount = toNumber(payAmountRaw);
+
+    const isTerminalPaidState = status === "finished" || status === "confirmed";
+    const isPaid = isTerminalPaidState && payAmount > 0 && actuallyPaid >= payAmount;
+    const isUnderpaid = isTerminalPaidState && payAmount > 0 && actuallyPaid > 0 && actuallyPaid < payAmount;
+
+    return { isPaid, isUnderpaid };
 }
 
 function safeEqualHex(a: string, b: string) {
@@ -64,7 +71,7 @@ export async function POST(req: Request) {
 
     const { data: beforeRow } = await supabaseAdmin
         .from("crypto_payments")
-        .select("status, actually_paid, email, full_name, plan, location")
+        .select("status, actually_paid, pay_amount, email, full_name, plan, location")
         .eq("nowpayments_payment_id", paymentId)
         .maybeSingle();
 
@@ -81,6 +88,23 @@ export async function POST(req: Request) {
     if (typeof payload?.outcome_amount === "number") updatePayload.outcome_amount = payload.outcome_amount;
     if (typeof payload?.outcome_currency === "string") updatePayload.outcome_currency = payload.outcome_currency;
 
+    const computedPayAmount =
+        (updatePayload as any).pay_amount ??
+        (beforeRow as any)?.pay_amount ??
+        payload?.pay_amount ??
+        payload?.price_amount ??
+        null;
+
+    const paymentState = computeNowpaymentsPaidStatus(
+        status,
+        (updatePayload as any).actually_paid ?? payload?.actually_paid,
+        computedPayAmount
+    );
+
+    if (paymentState.isUnderpaid) {
+        updatePayload.status = "underpaid";
+    }
+
     const { error: updateError } = await supabaseAdmin
         .from("crypto_payments")
         .update(updatePayload)
@@ -92,12 +116,21 @@ export async function POST(req: Request) {
 
     const { data: afterRow } = await supabaseAdmin
         .from("crypto_payments")
-        .select("status, actually_paid, email, full_name, plan, location")
+        .select("status, actually_paid, pay_amount, email, full_name, plan, location")
         .eq("nowpayments_payment_id", paymentId)
         .maybeSingle();
 
-    const beforePaid = isNowpaymentsPaid((beforeRow as any)?.status, (beforeRow as any)?.actually_paid);
-    const afterPaid = isNowpaymentsPaid((afterRow as any)?.status ?? status, (afterRow as any)?.actually_paid ?? payload?.actually_paid);
+    const beforePaid = computeNowpaymentsPaidStatus(
+        (beforeRow as any)?.status,
+        (beforeRow as any)?.actually_paid,
+        (beforeRow as any)?.pay_amount
+    ).isPaid;
+
+    const afterPaid = computeNowpaymentsPaidStatus(
+        (afterRow as any)?.status ?? updatePayload.status,
+        (afterRow as any)?.actually_paid ?? (updatePayload as any).actually_paid ?? payload?.actually_paid,
+        (afterRow as any)?.pay_amount ?? computedPayAmount
+    ).isPaid;
 
     if (afterPaid && !beforePaid) {
         const to = String((afterRow as any)?.email ?? (beforeRow as any)?.email ?? "").trim();

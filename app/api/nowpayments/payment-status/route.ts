@@ -2,18 +2,25 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { sendPaymentSuccessEmail } from "@/lib/mailer";
 
-function isNowpaymentsPaid(statusRaw: unknown, actuallyPaidRaw: unknown) {
-    const status = String(statusRaw ?? "").toLowerCase();
-    const actuallyPaid =
-        typeof actuallyPaidRaw === "number"
-            ? actuallyPaidRaw
-            : typeof actuallyPaidRaw === "string"
-              ? Number(actuallyPaidRaw)
-              : 0;
+function toNumber(value: unknown) {
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+        const num = Number(value);
+        return Number.isFinite(num) ? num : 0;
+    }
+    return 0;
+}
 
-    if (status === "finished") return true;
-    if (status === "confirmed" && Number.isFinite(actuallyPaid) && actuallyPaid > 0) return true;
-    return false;
+function computeNowpaymentsPaidStatus(statusRaw: unknown, actuallyPaidRaw: unknown, payAmountRaw: unknown) {
+    const status = String(statusRaw ?? "").toLowerCase();
+    const actuallyPaid = toNumber(actuallyPaidRaw);
+    const payAmount = toNumber(payAmountRaw);
+
+    const isTerminalPaidState = status === "finished" || status === "confirmed";
+    const isPaid = isTerminalPaidState && payAmount > 0 && actuallyPaid >= payAmount;
+    const isUnderpaid = isTerminalPaidState && payAmount > 0 && actuallyPaid > 0 && actuallyPaid < payAmount;
+
+    return { isPaid, isUnderpaid };
 }
 
 export async function GET(req: Request) {
@@ -60,7 +67,7 @@ export async function GET(req: Request) {
 
         const { data: beforeRow } = await supabaseAdmin
             .from("crypto_payments")
-            .select("status, actually_paid, email, full_name, plan, location")
+            .select("status, actually_paid, pay_amount, email, full_name, plan, location")
             .eq("nowpayments_payment_id", nowpaymentsPaymentId)
             .maybeSingle();
 
@@ -76,6 +83,23 @@ export async function GET(req: Request) {
         if ((statusJson as any).outcome_amount != null) updatePayload.outcome_amount = (statusJson as any).outcome_amount;
         if ((statusJson as any).outcome_currency) updatePayload.outcome_currency = (statusJson as any).outcome_currency;
 
+        const computedPayAmount =
+            (updatePayload as any).pay_amount ??
+            (beforeRow as any)?.pay_amount ??
+            (statusJson as any).pay_amount ??
+            (statusJson as any).price_amount ??
+            null;
+
+        const paymentState = computeNowpaymentsPaidStatus(
+            nowpaymentsStatus,
+            (updatePayload as any).actually_paid ?? (statusJson as any).actually_paid,
+            computedPayAmount
+        );
+
+        if (paymentState.isUnderpaid) {
+            updatePayload.status = "underpaid";
+        }
+
         await supabaseAdmin
             .from("crypto_payments")
             .update(updatePayload)
@@ -83,12 +107,21 @@ export async function GET(req: Request) {
 
         const { data: dbRow } = await supabaseAdmin
             .from("crypto_payments")
-            .select("status, expires_at, actually_paid, email, full_name, plan, location")
+            .select("status, expires_at, actually_paid, pay_amount, email, full_name, plan, location")
             .eq("nowpayments_payment_id", nowpaymentsPaymentId)
             .maybeSingle();
 
-        const beforePaid = isNowpaymentsPaid((beforeRow as any)?.status, (beforeRow as any)?.actually_paid);
-        const afterPaid = isNowpaymentsPaid((dbRow as any)?.status ?? nowpaymentsStatus, (dbRow as any)?.actually_paid ?? (statusJson as any).actually_paid);
+        const beforePaid = computeNowpaymentsPaidStatus(
+            (beforeRow as any)?.status,
+            (beforeRow as any)?.actually_paid,
+            (beforeRow as any)?.pay_amount
+        ).isPaid;
+
+        const afterPaid = computeNowpaymentsPaidStatus(
+            (dbRow as any)?.status ?? updatePayload.status,
+            (dbRow as any)?.actually_paid ?? (updatePayload as any).actually_paid ?? (statusJson as any).actually_paid,
+            (dbRow as any)?.pay_amount ?? computedPayAmount
+        ).isPaid;
 
         if (afterPaid && !beforePaid) {
             const to = String((dbRow as any)?.email ?? (beforeRow as any)?.email ?? "").trim();
