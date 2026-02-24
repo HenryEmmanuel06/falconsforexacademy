@@ -12,6 +12,7 @@ function getSmtpConfig() {
     const portRaw = process.env.SMTP_PORT;
     const user = process.env.SMTP_USER;
     const pass = process.env.SMTP_PASS;
+    const secureRaw = process.env.SMTP_SECURE;
 
     if (!host) throw new Error("SMTP_HOST is not set");
     if (!portRaw) throw new Error("SMTP_PORT is not set");
@@ -21,19 +22,27 @@ function getSmtpConfig() {
     const port = Number(portRaw);
     if (!Number.isFinite(port)) throw new Error("SMTP_PORT is invalid");
 
-    return { host, port, user, pass };
+    const secure = secureRaw != null ? secureRaw === "true" : port === 465;
+
+    return { host, port, user, pass, secure };
 }
 
 export async function sendPaymentSuccessEmail(input: PaymentSuccessEmailInput) {
-    const { host, port, user, pass } = getSmtpConfig();
+    const { host, port, user, pass, secure } = getSmtpConfig();
 
     const transporter = nodemailer.createTransport({
         host,
         port,
-        secure: port === 465,
+        secure,
         auth: {
             user,
             pass,
+        },
+        connectionTimeout: 20_000,
+        greetingTimeout: 20_000,
+        socketTimeout: 30_000,
+        tls: {
+            servername: host,
         },
     });
 

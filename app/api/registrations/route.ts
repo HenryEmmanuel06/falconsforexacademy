@@ -4,6 +4,69 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
+function normalizePlan(plan: string) {
+    return String(plan ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+}
+
+function toIsoTimestamp(value: unknown) {
+    if (typeof value !== "string" || !value.trim()) return null;
+    const d = new Date(value);
+    return Number.isFinite(d.getTime()) ? d.toISOString() : null;
+}
+
+async function getLatestSuccessfulPaymentByEmail(email: string) {
+    const normalizedEmail = email.trim();
+
+    const nairaQuery = supabaseAdmin
+        .from("naira_payments")
+        .select("email, status, plan, paid_at, created_at")
+        .ilike("email", normalizedEmail)
+        .eq("status", "success")
+        .order("paid_at", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    const cryptoSuccessStatuses = ["finished", "confirmed", "paid", "success"];
+    const cryptoQuery = supabaseAdmin
+        .from("crypto_payments")
+        .select("email, status, plan, updated_at, created_at")
+        .ilike("email", normalizedEmail)
+        .in("status", cryptoSuccessStatuses)
+        .order("updated_at", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    const [{ data: naira, error: nairaError }, { data: crypto, error: cryptoError }] = await Promise.all([
+        nairaQuery,
+        cryptoQuery,
+    ]);
+
+    if (nairaError) throw new Error(nairaError.message);
+    if (cryptoError) throw new Error(cryptoError.message);
+
+    const nairaTime = toIsoTimestamp((naira as any)?.paid_at) ?? toIsoTimestamp((naira as any)?.created_at);
+    const cryptoTime =
+        toIsoTimestamp((crypto as any)?.updated_at) ?? toIsoTimestamp((crypto as any)?.created_at);
+
+    if (!naira && !crypto) return null;
+
+    if (naira && crypto) {
+        if (nairaTime && cryptoTime) {
+            return new Date(cryptoTime).getTime() >= new Date(nairaTime).getTime()
+                ? { source: "crypto" as const, row: crypto }
+                : { source: "naira" as const, row: naira };
+        }
+        return cryptoTime ? { source: "crypto" as const, row: crypto } : { source: "naira" as const, row: naira };
+    }
+
+    return naira ? { source: "naira" as const, row: naira } : { source: "crypto" as const, row: crypto };
+}
+
 function sanitizeFileName(name: string) {
     return name
         .trim()
@@ -72,6 +135,41 @@ export async function POST(req: Request) {
 
         if (!email) {
             return NextResponse.json({ error: "Email is required" }, { status: 400 });
+        }
+
+        const successfulPayment = await getLatestSuccessfulPaymentByEmail(email);
+        if (!successfulPayment) {
+            return NextResponse.json(
+                { error: "You must complete a successful payment before you can register." },
+                { status: 400 }
+            );
+        }
+
+        const paidPlanRaw = String((successfulPayment as any)?.row?.plan ?? "").trim();
+        const paidPlan = normalizePlan(paidPlanRaw);
+        const signalsPlan = normalizePlan("Premium Signals");
+
+        if (paidPlan === signalsPlan) {
+            return NextResponse.json(
+                { error: "Premium Signals payments are not eligible for registration." },
+                { status: 400 }
+            );
+        }
+
+        const allowedPlans = new Set([
+            normalizePlan("1 Month Plan"),
+            normalizePlan("3 Months Plan"),
+            normalizePlan("6 Months Plan"),
+            normalizePlan("1 Year Plan"),
+            normalizePlan("One Year Plan"),
+            normalizePlan("12 Months Plan"),
+        ]);
+
+        if (!allowedPlans.has(paidPlan)) {
+            return NextResponse.json(
+                { error: "Your payment plan is not eligible for registration." },
+                { status: 400 }
+            );
         }
 
         if (trainingLocation !== "Kano" && trainingLocation !== "Abuja") {

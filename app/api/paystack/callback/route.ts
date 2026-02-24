@@ -65,14 +65,16 @@ export async function GET(req: Request) {
                                     plan,
                                     location,
                                 });
-                            } catch {
-                                // ignore email errors; payment flow should still continue
+                            } catch (error) {
+                                const message = error instanceof Error ? error.message : String(error);
+                                console.error("[paystack/callback] Failed to send payment success email:", message);
                             }
                         }
                     }
                 }
-            } catch {
-                // ignore verification errors; redirect still continues
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                console.error("[paystack/callback] Verification error:", message);
             }
         }
     }

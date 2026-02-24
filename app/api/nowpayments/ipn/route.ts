@@ -146,8 +146,9 @@ export async function POST(req: Request) {
                     plan,
                     location,
                 });
-            } catch {
-                // ignore email errors; IPN should still return ok
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                console.error("[nowpayments/ipn] Failed to send payment success email:", message);
             }
         }
     }

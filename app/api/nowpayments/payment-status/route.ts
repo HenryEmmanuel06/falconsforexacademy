@@ -137,8 +137,9 @@ export async function GET(req: Request) {
                         plan,
                         location,
                     });
-                } catch {
-                    // ignore email errors; status polling should still work
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    console.error("[nowpayments/payment-status] Failed to send payment success email:", message);
                 }
             }
         }
