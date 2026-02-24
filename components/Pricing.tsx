@@ -223,8 +223,8 @@ export default function Pricing() {
                     typeof actuallyPaidRaw === "number"
                         ? actuallyPaidRaw
                         : typeof actuallyPaidRaw === "string"
-                          ? Number(actuallyPaidRaw)
-                          : 0;
+                            ? Number(actuallyPaidRaw)
+                            : 0;
 
                 const isPaid = Number.isFinite(actuallyPaid) && actuallyPaid > 0;
 
@@ -364,51 +364,44 @@ export default function Pricing() {
                             {/* <!-- Features --> */}
                             <ul className="space-y-3 text-sm text-[#091B25]">
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
-                                    Physical ClassNameroom Trainings
+                                    Physical Classroom Trainings
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Live Market Breakdown & Trade Execution
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Price Action Trade Setups & Entry Models
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Market Structure & Candlestick Analysis
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Risk Management & Trading Psychology Basics
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Physical Q&A Session
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#CC5DF9] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/purple-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Market Analysis
                                 </li>
@@ -462,51 +455,44 @@ export default function Pricing() {
                             {/* <!-- Features --> */}
                             <ul className="space-y-3 text-sm text-[#091B25]">
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Physical ClassNameroom Trainings
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Live Market Breakdown & Trade Execution
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Market & Advanced Top-Down Analysis
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Advanced Price Action Setups & Trade Execution
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Market Structure, Trend & Key Level Identification
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Advanced Risk Management & Psychology
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#091B25] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/black-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Physical Q&A Session
                                 </li>
@@ -532,11 +518,11 @@ export default function Pricing() {
 
                             {/* <!-- Icon --> */}
                             <div className="w-[40px] h-[40px] flex items-center justify-center rounded-[5px] bg-[#FF8513] mb-[20px]">
-                                <Image 
-                                src="/images/icons/star_plan.svg"
-                                alt="star plan"
-                                width={21}
-                                height={21}
+                                <Image
+                                    src="/images/icons/star_plan.svg"
+                                    alt="star plan"
+                                    width={21}
+                                    height={21}
                                 />
 
 
@@ -566,51 +552,44 @@ export default function Pricing() {
                             {/* <!-- Features --> */}
                             <ul className="space-y-3 text-sm text-[#091B25]">
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Physical ClassNameroom Trainings
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Live Market Breakdown & Trade Execution
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Market & Advanced Top-Down Analysis
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Advanced Price Action Setups & Trade Execution
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Market Structure, Trend & Key Level Identification
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Advanced Risk Management & Psychology
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#FF8513] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+                                    <span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/orange-icon.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly Physical Q&A & Trade Review Sessions
                                 </li>
@@ -637,30 +616,26 @@ export default function Pricing() {
                             <p className="text-[14px] md:text-[16px]">Minimum 1:5 Risk-to-Reward ratio</p>
                             <div className="grid grid-cols-1 lg:grid-cols-2 mt-[20px] md:mt-[50px] gap-[20px]">
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+<span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/dark-orange.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     2-5 high-quality signals per week
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+<span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/dark-orange.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Weekly target: 1,000 - 3,000 pips
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+<span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/dark-orange.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Instruments traded: BTC/USD & XAU/USD
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <span className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-[#AD6500] text-white text-xs"><svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.7464 0.274437L3.58641 7.18444L1.68641 5.15444C1.33641 4.82444 0.786406 4.80444 0.386406 5.08444C-0.00359413 5.37444 -0.113594 5.88444 0.126406 6.29444L2.37641 9.95444C2.59641 10.2944 2.97641 10.5044 3.40641 10.5044C3.81641 10.5044 4.20641 10.2944 4.42641 9.95444C4.78641 9.48444 11.6564 1.29444 11.6564 1.29444C12.5564 0.374437 11.4664 -0.435563 10.7464 0.264437V0.274437Z" fill="white" />
-                                    </svg>
+<span className="min-w-[24px] min-h-[24px] flex items-center justify-center text-white text-xs">
+                                        <Image src="images/icons/dark-orange.svg" alt="icon" width={24} height={24} />
                                     </span>
                                     Active on Asian, London & New York overlap sessions
                                 </div>
@@ -752,17 +727,16 @@ export default function Pricing() {
                                 />
                                 {email.trim() && (
                                     <p
-                                        className={`pt-[8px] text-[13px] ${
-                                            emailValidationStatus === "valid" ? "text-green-600" : emailValidationStatus === "invalid" ? "text-red-600" : "text-[#535862]"
-                                        }`}
+                                        className={`pt-[8px] text-[13px] ${emailValidationStatus === "valid" ? "text-green-600" : emailValidationStatus === "invalid" ? "text-red-600" : "text-[#535862]"
+                                            }`}
                                     >
                                         {emailValidationStatus === "validating"
                                             ? "Validating email..."
                                             : emailValidationStatus === "valid"
-                                              ? "Email is valid"
-                                              : emailValidationStatus === "invalid"
-                                                ? emailValidationMessage ?? "Please enter a valid email"
-                                                : ""}
+                                                ? "Email is valid"
+                                                : emailValidationStatus === "invalid"
+                                                    ? emailValidationMessage ?? "Please enter a valid email"
+                                                    : ""}
                                     </p>
                                 )}
                             </div>
@@ -861,9 +835,8 @@ export default function Pricing() {
                                     type="button"
                                     onClick={handleProceed}
                                     disabled={!canProceed}
-                                    className={`px-[34px] py-[14px] rounded-full bg-[#091B25] text-white font-semibold ${
-                                        canProceed ? "" : "opacity-50 cursor-not-allowed"
-                                    }`}
+                                    className={`px-[34px] py-[14px] rounded-full bg-[#091B25] text-white font-semibold ${canProceed ? "" : "opacity-50 cursor-not-allowed"
+                                        }`}
                                 >
                                     {isProceeding ? "Processing..." : paymentOption === "Crypto" ? "Generate Wallet" : "Proceed"}
                                 </button>
