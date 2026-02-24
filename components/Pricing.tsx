@@ -501,7 +501,7 @@ export default function Pricing() {
                                 {/* <!-- Button --> */}
                                 <button
                                     onClick={() => openModal("3 Months Plan")}
-                                    className="mt-auto w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer"
+                                    className="mt-[20px] w-full py-3 rounded-full border-2 border-[#091B25] text-[#091B25] font-medium hover:bg-[#091B25] hover:text-white transition cursor-pointer"
                                 >
                                     Get Started
                                 </button>

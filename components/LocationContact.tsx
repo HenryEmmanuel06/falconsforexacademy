@@ -71,7 +71,7 @@ export default function Location() {
 
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Opening Time: </span> <span className="block"> 9am prompt</span></p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 3pm prompt</span></p>
                                     </div>
                                 </div>
 
@@ -82,7 +82,7 @@ export default function Location() {
                                         </svg>
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2345678909</p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2348036593242</p>
                                     </div>
                                 </div>
 
@@ -111,7 +111,15 @@ export default function Location() {
 
                 </div>
 
-
+<div className="w-full h-50px md:h-[100px] flex items-center justify-center mt-[25px] md:mt-[50px]">
+    <Image
+    src="images/icons/line.svg"
+    alt="image/line.svg"
+    width={10}
+    height={10}
+    className="w-full"
+    />
+</div>
 
                  <div className="flex flex-col lg:flex-row gap-[40px] lg:gap-[115px] pt-[50px] lg:pt-[100px]">
                     <div>
@@ -158,7 +166,7 @@ export default function Location() {
 
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Opening Time: </span> <span className="block"> 10am prompt</span></p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 3pm prompt</span></p>
                                     </div>
                                 </div>
 
@@ -189,7 +197,7 @@ export default function Location() {
                                         </svg>
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2345678909</p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2348036593242</p>
                                     </div>
                                 </div>
 
