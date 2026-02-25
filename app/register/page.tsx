@@ -42,7 +42,6 @@ export default function RegisterPage() {
         if (!form.email.trim()) return false;
         if (!form.trainingLocation) return false;
         if (!form.tradingLevel) return false;
-        if (!form.govIdFile) return false;
         if (!form.paymentProofFile) return false;
         if (!form.portraitFile) return false;
         return true;
@@ -271,7 +270,6 @@ export default function RegisterPage() {
                                                 accept="image/*,application/pdf,.doc,.docx"
                                                 onChange={(e) => setForm((p) => ({ ...p, govIdFile: e.target.files?.[0] ?? null }))}
                                                 className="mt-[10px] block w-full text-[12px]"
-                                                required
                                             />
                                         </div>
 

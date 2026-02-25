@@ -12,6 +12,7 @@ type NairaPaymentRow = {
     payment_type: string | null;
     amount_ngn: number | null;
     status: string | null;
+    paid_at: string | null;
     created_at: string;
 };
 
@@ -25,13 +26,14 @@ type CryptoPaymentRow = {
     pay_currency: string | null;
     pay_amount: number | null;
     status: string | null;
+    updated_at: string | null;
     created_at: string;
 };
 
 type UnifiedPaymentRow = {
     paymentType: "Naira" | "Crypto";
     id: string;
-    created_at: string;
+    paymentTime: string;
     email: string | null;
     phone_number: string | null;
     full_name: string | null;
@@ -55,12 +57,12 @@ export default function AdminPaymentsPage() {
                 const [nairaRes, cryptoRes] = await Promise.all([
                     supabase
                         .from("naira_payments")
-                        .select("id, full_name, email, phone_number, location, payment_type, amount_ngn, status, created_at")
+                        .select("id, full_name, email, phone_number, location, payment_type, amount_ngn, status, paid_at, created_at")
                         .order("created_at", { ascending: false })
                         .limit(500),
                     supabase
                         .from("crypto_payments")
-                        .select("id, full_name, email, phone_number, location, price_amount_usd, pay_currency, pay_amount, status, created_at")
+                        .select("id, full_name, email, phone_number, location, price_amount_usd, pay_currency, pay_amount, status, updated_at, created_at")
                         .order("created_at", { ascending: false })
                         .limit(500),
                 ]);
@@ -92,10 +94,11 @@ export default function AdminPaymentsPage() {
     const unified = useMemo<UnifiedPaymentRow[]>(() => {
         const ngn: UnifiedPaymentRow[] = nairaPayments.map((p) => {
             const amount = typeof p.amount_ngn === "number" ? `₦${p.amount_ngn.toLocaleString()}` : "₦—";
+            const paymentTime = p.paid_at || p.created_at;
             return {
                 paymentType: "Naira",
                 id: p.id,
-                created_at: p.created_at,
+                paymentTime,
                 email: p.email,
                 phone_number: p.phone_number,
                 full_name: p.full_name,
@@ -113,10 +116,11 @@ export default function AdminPaymentsPage() {
                       ? `$${p.price_amount_usd}`
                       : "—";
 
+            const paymentTime = p.updated_at || p.created_at;
             return {
                 paymentType: "Crypto",
                 id: p.id,
-                created_at: p.created_at,
+                paymentTime,
                 email: p.email,
                 phone_number: p.phone_number,
                 full_name: p.full_name,
@@ -127,8 +131,8 @@ export default function AdminPaymentsPage() {
         });
 
         const merged = [...ngn, ...crypto].sort((a, b) => {
-            const ad = new Date(a.created_at).getTime();
-            const bd = new Date(b.created_at).getTime();
+            const ad = new Date(a.paymentTime).getTime();
+            const bd = new Date(b.paymentTime).getTime();
             return bd - ad;
         });
 
@@ -218,7 +222,7 @@ export default function AdminPaymentsPage() {
                                 {unified.map((p) => (
                                     <tr key={`${p.paymentType}-${p.id}`}>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                                            {new Date(p.created_at).toLocaleString()}
+                                            {new Date(p.paymentTime).toLocaleString()}
                                         </td>
                                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                                             <div className="font-medium text-gray-900">{p.full_name || "—"}</div>

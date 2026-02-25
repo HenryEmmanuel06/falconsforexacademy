@@ -180,10 +180,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Trading level is required" }, { status: 400 });
         }
 
-        if (!(govId instanceof File)) {
-            return NextResponse.json({ error: "Valid government ID file is required" }, { status: 400 });
-        }
-
         if (!(paymentProof instanceof File)) {
             return NextResponse.json({ error: "Proof of payment file is required" }, { status: 400 });
         }
@@ -195,11 +191,12 @@ export async function POST(req: Request) {
         const submittedAt = new Date().toISOString();
         const prefix = submittedAt.slice(0, 10);
 
-        const [govUpload, paymentUpload, portraitUpload] = await Promise.all([
-            uploadToBucket({ bucket: "registration_gov_ids", prefix, file: govId }),
+        const [paymentUpload, portraitUpload] = await Promise.all([
             uploadToBucket({ bucket: "registration_payment_proofs", prefix, file: paymentProof }),
             uploadToBucket({ bucket: "registration_portraits", prefix, file: portrait }),
         ]);
+
+        const govUpload = govId instanceof File ? await uploadToBucket({ bucket: "registration_gov_ids", prefix, file: govId }) : null;
 
         const insertPayload = {
             full_name: fullName,
@@ -210,8 +207,8 @@ export async function POST(req: Request) {
             nationality: nationality || null,
             training_location: trainingLocation,
             trading_level: tradingLevel,
-            gov_id_bucket: govUpload.bucket,
-            gov_id_path: govUpload.path,
+            gov_id_bucket: govUpload?.bucket ?? null,
+            gov_id_path: govUpload?.path ?? null,
             payment_proof_bucket: paymentUpload.bucket,
             payment_proof_path: paymentUpload.path,
             portrait_bucket: portraitUpload.bucket,
