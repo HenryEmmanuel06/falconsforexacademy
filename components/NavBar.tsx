@@ -72,10 +72,10 @@ export default function NavBar() {
         {/* Actions */}
         <div className="flex items-center gap-3">
           <Link
-            href="/pricing"
+            href="/register"
             className="hidden lg:block rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800"
           >
-            Join Academy
+            Register
           </Link>
           
           {/* Mobile menu button */}
@@ -154,11 +154,11 @@ export default function NavBar() {
               </ul>
               <div className="pt-4 border-t border-gray-200">
                 <Link
-                  href="/login"
+                  href="/register"
                   className="block w-full rounded-[30px] bg-[#091B25] px-[28px] py-[16px] text-md font-semibold text-white hover:bg-zinc-800 text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Join Academy
+                 Register
                 </Link>
               </div>
             </nav>

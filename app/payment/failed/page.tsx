@@ -78,7 +78,7 @@ export default async function PaymentFailedPage({ searchParams }: Props) {
                              Back to Home
                          </Link>
                          <Link
-                             href="/#pricing"
+                             href="/pricing"
                              className="inline-flex items-center justify-center rounded-full border border-[#091B25] px-8 py-3 text-[#091B25] font-semibold"
                          >
                              Try Again

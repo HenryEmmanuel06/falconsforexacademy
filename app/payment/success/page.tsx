@@ -78,7 +78,7 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
                     {normalized && successStatuses.has(normalized) && (
                         <div className="mt-6 rounded-[14px] border border-[#EAECF0] bg-[#F9FAFB] px-5 py-4">
                             <p className="text-[14px] text-[#091B25]">
-                                Your payment was successful. Please complete your registration to gain full access.
+                              Please complete your registration to gain full access.
                             </p>
                         </div>
                     )}
