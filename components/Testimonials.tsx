@@ -12,22 +12,16 @@ export default function Testimonials() {
 
     const testimonials = [
         {
-            text: "Lorem vjvhhg dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            name: "Sarah Harp",
-            plan: "Lifetime Plan",
-            image: "/images/testy_img.png",
+            text: "Thank you sir, Honestly speaking you are doing what other people/mentor are not. Taking $50 upward freely for us most are not even sniper. Thank you sir we really appreciate you BIG LOVE sir. Thank you GOD BLESS YOU. Amen.",
+            name: "Emmanuel",
+            plan: "from telegram",
+            image: "/images/testy_img_1.png",
         },
         {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            name: "henry Harp",
-            plan: "Lifetime Plan",
-            image: "/images/testy_img.png",
-        },
-        {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            name: "Sarah Harp",
-            plan: "Lifetime Plan",
-            image: "/images/testy_img.png",
+            text: "Boss, thank you so much 🙏. The Gold signal was really accurate, perfect entry and strong movement in line with the market. The risk-to-reward ratio was great too. You are truly skilled at what you do. I really appreciate the quality of your signals 💪🏼🔥",
+            name: "Faisal",
+            plan: "from telegram",
+            image: "/images/testy_img_2.png",
         },
     ];
 
