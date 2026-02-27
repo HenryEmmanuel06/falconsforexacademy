@@ -71,7 +71,7 @@ export default function Location() {
 
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 3pm prompt</span></p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 4pm prompt</span></p>
                                     </div>
                                 </div>
 
@@ -82,7 +82,7 @@ export default function Location() {
                                         </svg>
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2348036593242</p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2349066555596</p>
                                     </div>
                                 </div>
 
@@ -166,7 +166,7 @@ export default function Location() {
 
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 3pm prompt</span></p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Closing Time: </span> <span className="block"> 4pm prompt</span></p>
                                     </div>
                                 </div>
 
@@ -197,7 +197,7 @@ export default function Location() {
                                         </svg>
                                     </div>
                                     <div className="max-w-[204px]">
-                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2348036593242</p>
+                                        <p className="text-[#535862] text-[16px] font-normal"><span className="inline-block font-bold">Contact:  </span> +2349066555596</p>
                                     </div>
                                 </div>
 

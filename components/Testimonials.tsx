@@ -23,6 +23,12 @@ export default function Testimonials() {
             plan: "from telegram",
             image: "/images/testy_img_2.png",
         },
+         {
+            text: "Where are you from bro like you make the market yourself. I just got to know and follow you for a few days and this kind of confidence beats me down. You are too good bro.",
+            name: "Ayomdele Andrew",
+            plan: "from telegram",
+            image: "/images/testy_img_2.png",
+        }
     ];
 
     const prevRef = useRef<HTMLButtonElement | null>(null);
