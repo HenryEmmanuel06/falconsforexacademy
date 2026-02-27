@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type RegistrationRow = {
@@ -13,8 +13,8 @@ type RegistrationRow = {
     nationality: string | null;
     training_location: string;
     trading_level: string;
-    gov_id_bucket: string;
-    gov_id_path: string;
+    gov_id_bucket: string | null;
+    gov_id_path: string | null;
     payment_proof_bucket: string;
     payment_proof_path: string;
     portrait_bucket: string;
@@ -34,6 +34,22 @@ export default function AdminRegistrationsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [rows, setRows] = useState<RegistrationRow[]>([]);
+    const [selected, setSelected] = useState<RegistrationRow | null>(null);
+
+    const selectedDetails = useMemo(() => {
+        if (!selected) return [] as Array<{ label: string; value: string }>;
+        return [
+            { label: "Full Name", value: selected.full_name },
+            { label: "Email", value: selected.email },
+            { label: "Phone", value: selected.phone_number },
+            { label: "Gender", value: selected.gender },
+            { label: "Nationality", value: selected.nationality ?? "—" },
+            { label: "Residential Address", value: selected.residential_address ?? "—" },
+            { label: "Training Location", value: selected.training_location },
+            { label: "Trading Level", value: selected.trading_level },
+            { label: "Submitted", value: new Date(selected.created_at).toLocaleString() },
+        ];
+    }, [selected]);
 
     useEffect(() => {
         const load = async () => {
@@ -64,6 +80,29 @@ export default function AdminRegistrationsPage() {
 
         load();
     }, []);
+
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setSelected(null);
+            }
+        };
+
+        if (selected) {
+            window.addEventListener("keydown", onKeyDown);
+            return () => window.removeEventListener("keydown", onKeyDown);
+        }
+    }, [selected]);
+
+    useEffect(() => {
+        if (!selected) return;
+
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prevOverflow;
+        };
+    }, [selected]);
 
     return (
         <div>
@@ -101,7 +140,11 @@ export default function AdminRegistrationsPage() {
                             </thead>
                             <tbody>
                                 {rows.map((r) => (
-                                    <tr key={r.id} className="border-t border-gray-100">
+                                    <tr
+                                        key={r.id}
+                                        className="border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
+                                        onClick={() => setSelected(r)}
+                                    >
                                         <td className="px-4 py-3 text-gray-600">
                                             {new Date(r.created_at).toLocaleString()}
                                         </td>
@@ -120,16 +163,20 @@ export default function AdminRegistrationsPage() {
                                             <div className="flex flex-wrap gap-2">
                                                 <button
                                                     type="button"
-                                                    onClick={async () => {
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
+                                                        if (!r.gov_id_bucket || !r.gov_id_path) return;
                                                         await openSignedFile(r.gov_id_bucket, r.gov_id_path);
                                                     }}
+                                                    disabled={!r.gov_id_bucket || !r.gov_id_path}
                                                     className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
                                                 >
                                                     Gov ID
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    onClick={async () => {
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
                                                         await openSignedFile(r.payment_proof_bucket, r.payment_proof_path);
                                                     }}
                                                     className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
@@ -138,7 +185,8 @@ export default function AdminRegistrationsPage() {
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    onClick={async () => {
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
                                                         await openSignedFile(r.portrait_bucket, r.portrait_path);
                                                     }}
                                                     className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
@@ -151,6 +199,78 @@ export default function AdminRegistrationsPage() {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+
+            {selected && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+                    onMouseDown={() => setSelected(null)}
+                >
+                    <div
+                        className="w-full max-w-[760px] max-h-[calc(100vh-64px)] overflow-y-auto rounded-[18px] bg-white shadow-xl border border-gray-200"
+                        onMouseDown={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-start justify-between gap-4 border-b border-gray-200 px-5 py-4">
+                            <div>
+                                <h2 className="text-[18px] font-semibold text-[#091B25]">Registration Details</h2>
+                                <p className="text-[12px] text-gray-600 pt-1">{selected.full_name}</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setSelected(null)}
+                                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
+                            >
+                                Close
+                            </button>
+                        </div>
+
+                        <div className="px-5 py-5 overflow-y-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {selectedDetails.map((item) => (
+                                    <div key={item.label} className="rounded-[14px] border border-gray-200 bg-gray-50 px-4 py-3">
+                                        <div className="text-[11px] font-semibold text-gray-600">{item.label}</div>
+                                        <div className="pt-1 text-[14px] text-[#091B25] break-words">{item.value}</div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-5 rounded-[14px] border border-gray-200 bg-white px-4 py-4">
+                                <div className="text-[12px] font-semibold text-gray-700">Files</div>
+                                <div className="mt-3 flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            if (!selected.gov_id_bucket || !selected.gov_id_path) return;
+                                            await openSignedFile(selected.gov_id_bucket, selected.gov_id_path);
+                                        }}
+                                        disabled={!selected.gov_id_bucket || !selected.gov_id_path}
+                                        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Gov ID
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            await openSignedFile(selected.payment_proof_bucket, selected.payment_proof_path);
+                                        }}
+                                        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
+                                    >
+                                        Payment Proof
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            await openSignedFile(selected.portrait_bucket, selected.portrait_path);
+                                        }}
+                                        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
+                                    >
+                                        Portrait
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

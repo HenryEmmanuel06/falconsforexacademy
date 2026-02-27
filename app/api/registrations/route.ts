@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendRegistrationSuccessEmail } from "@/lib/mailer";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
@@ -224,6 +225,17 @@ export async function POST(req: Request) {
 
         if (error) {
             return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        try {
+            await sendRegistrationSuccessEmail({
+                to: email,
+                fullName,
+                trainingLocation,
+            });
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err);
+            console.error("[registrations] Failed to send registration success email:", message);
         }
 
         return NextResponse.json({ ok: true, id: (data as any)?.id ?? null });
