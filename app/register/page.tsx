@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type FormState = {
     fullName: string;
@@ -34,6 +34,17 @@ export default function RegisterPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+
+    useEffect(() => {
+        if (!submitError && !submitSuccess) return;
+
+        const t = window.setTimeout(() => {
+            setSubmitError(null);
+            setSubmitSuccess(false);
+        }, 6000);
+
+        return () => window.clearTimeout(t);
+    }, [submitError, submitSuccess]);
 
     const canSubmit = useMemo(() => {
         if (!form.fullName.trim()) return false;
@@ -112,6 +123,33 @@ export default function RegisterPage() {
             <section className="py-[40px] md:py-[70px]">
                 <div className="container">
                     <div className="mx-auto w-full max-w-[720px]">
+                        {(submitError || submitSuccess) && (
+                            <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-6 md:w-[420px]">
+                                <div
+                                    className={`rounded-[16px] border px-[14px] py-[12px] text-[13px] shadow-[0_10px_30px_rgba(2,6,23,0.14)] backdrop-blur bg-white/95 ${
+                                        submitError
+                                            ? "border-red-200"
+                                            : "border-green-200"
+                                    }`}
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className={submitError ? "text-red-700" : "text-green-700"}>
+                                            {submitError ?? "Registration submitted successfully."}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setSubmitError(null);
+                                                setSubmitSuccess(false);
+                                            }}
+                                            className="shrink-0 rounded-full border border-gray-200 bg-white px-3 py-1 text-[12px] font-semibold text-[#091B25] hover:bg-gray-50"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div className="rounded-[22px] border border-[#EAECF0] bg-white shadow-[0_10px_30px_rgba(2,6,23,0.08)] overflow-hidden">
                             <div className="px-[22px] py-[22px] md:px-[30px] md:py-[26px] bg-gradient-to-r from-[#091B25] to-[#123040] text-white">
                                 <h1 className="text-[22px] md:text-[26px] font-semibold">Register for Training</h1>
@@ -121,18 +159,6 @@ export default function RegisterPage() {
                             </div>
 
                             <form onSubmit={onSubmit} className="px-[22px] py-[22px] md:px-[30px] md:py-[28px]">
-                                {submitError && (
-                                    <div className="mb-[16px] rounded-[14px] border border-red-200 bg-red-50 px-[14px] py-[12px] text-[13px] text-red-700">
-                                        {submitError}
-                                    </div>
-                                )}
-
-                                {submitSuccess && (
-                                    <div className="mb-[16px] rounded-[14px] border border-green-200 bg-green-50 px-[14px] py-[12px] text-[13px] text-green-700">
-                                        Registration submitted successfully.
-                                    </div>
-                                )}
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
                                     <div className="md:col-span-2">
                                         <label className="block text-[13px] font-semibold text-[#091B25]">Full Name</label>

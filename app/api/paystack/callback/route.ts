@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { sendPaymentSuccessEmail } from "@/lib/mailer";
+import { sendAdminPaymentNotificationEmail, sendPaymentSuccessEmail } from "@/lib/mailer";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -68,6 +68,22 @@ export async function GET(req: Request) {
                             } catch (error) {
                                 const message = error instanceof Error ? error.message : String(error);
                                 console.error("[paystack/callback] Failed to send payment success email:", message);
+                            }
+
+                            try {
+                                await sendAdminPaymentNotificationEmail({
+                                    provider: "paystack",
+                                    reference,
+                                    email: to,
+                                    fullName,
+                                    plan,
+                                    location,
+                                    status: paystackStatus,
+                                    paidAt,
+                                });
+                            } catch (error) {
+                                const message = error instanceof Error ? error.message : String(error);
+                                console.error("[paystack/callback] Failed to send admin payment notification email:", message);
                             }
                         }
                     }

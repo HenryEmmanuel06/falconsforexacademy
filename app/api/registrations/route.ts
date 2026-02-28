@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { sendRegistrationSuccessEmail } from "@/lib/mailer";
+import { sendAdminRegistrationNotificationEmail, sendRegistrationSuccessEmail } from "@/lib/mailer";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
@@ -236,6 +236,24 @@ export async function POST(req: Request) {
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
             console.error("[registrations] Failed to send registration success email:", message);
+        }
+
+        try {
+            await sendAdminRegistrationNotificationEmail({
+                id: String((data as any)?.id ?? ""),
+                fullName,
+                email,
+                phoneNumber,
+                gender,
+                trainingLocation,
+                tradingLevel,
+                nationality: nationality || null,
+                residentialAddress: residentialAddress || null,
+                createdAt: submittedAt,
+            });
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err);
+            console.error("[registrations] Failed to send admin registration notification email:", message);
         }
 
         return NextResponse.json({ ok: true, id: (data as any)?.id ?? null });

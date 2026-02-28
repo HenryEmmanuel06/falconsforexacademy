@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { sendPaymentSuccessEmail } from "@/lib/mailer";
+import { sendAdminPaymentNotificationEmail, sendPaymentSuccessEmail } from "@/lib/mailer";
 
 function toNumber(value: unknown) {
     if (typeof value === "number") return value;
@@ -140,6 +140,22 @@ export async function GET(req: Request) {
                 } catch (error) {
                     const message = error instanceof Error ? error.message : String(error);
                     console.error("[nowpayments/payment-status] Failed to send payment success email:", message);
+                }
+
+                try {
+                    await sendAdminPaymentNotificationEmail({
+                        provider: "nowpayments",
+                        reference: String(nowpaymentsPaymentId),
+                        email: to,
+                        fullName,
+                        plan,
+                        location,
+                        status: String((dbRow as any)?.status ?? updatePayload.status ?? nowpaymentsStatus),
+                        paidAt: serverNow,
+                    });
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    console.error("[nowpayments/payment-status] Failed to send admin payment notification email:", message);
                 }
             }
         }
