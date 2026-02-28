@@ -21,6 +21,32 @@ export default function Footer() {
                             height={32}
                         />
                         <p className="text-[#919191] text-[14px] font-normal max-w-[323px] pt-[25px]">Innovative training that focuses more on providing comprehensive trading solutions.</p>
+                        <div className="flex gap-[24px] mt-4">
+                        <Link href="https://www.instagram.com/falconsforexacademy/" target="_blank"><Image
+                        src="/images/icons/ig.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="https://x.com/falconsforexacademy" target="_blank"><Image
+                        src="/images/icons/x.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="https://www.facebook.com/falconsforexacademy/" target="_blank"><Image
+                        src="/images/icons/fb.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                           <Link href="https://wa.me/2348036593242" target="_blank"><Image
+                        src="/images/icons/wa.svg"
+                        alt="media link"
+                        width={24}
+                        height={24}
+                        /></Link>
+                    </div>
                     </div>
                     <div className="flex flex-col md:flex-row gap-[40px] md:gap-[150px]">
 
@@ -36,11 +62,11 @@ export default function Footer() {
                             <h4 className="text-[16px] font-medium">Contact</h4>
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
                                 <Link href="mailto:info@falconsforexacademy.com">info@falconsforexacademy.com</Link>
-                                <Link href="tel:+2348036593242">Call: +234 803 659 3242</Link>
+                                <Link href="#">Call: <Link href="tel:+2348036593242">+234 803 659 3242</Link> <br /> <Link href="tel:+2349066555596" className="pl-0 md:pl-[38px]">+234 906 655 5596</Link></Link>
                             </div>
                         </div>
                         <div className="text-white">
-                            <h4 className="text-[16px] font-medium">Legal</h4>
+                            <h4 className="text-[16px] font-medium">Legal</h4> 
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
                                 <Link href="/">Policy</Link>
                                 <Link href="/">Terms</Link>
@@ -52,32 +78,7 @@ export default function Footer() {
 
                 <MotionOnce className="fadein_up flex flex-col lg:flex-row gap-[20px] justify-between items-center mt-[50px] lg:mt-[100px] pt-[32px] border-t-1 border-[#FFFFFF1A]" duration={0.8}>
                     <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Falcons reserved.</span>
-                    <div className="flex gap-[24px]">
-                        <Link href="/"><Image
-                        src="/images/icons/ig.svg"
-                        alt="media link"
-                        width={24}
-                        height={24}
-                        /></Link>
-                           <Link href="/"><Image
-                        src="/images/icons/x.svg"
-                        alt="media link"
-                        width={24}
-                        height={24}
-                        /></Link>
-                           <Link href="/"><Image
-                        src="/images/icons/fb.svg"
-                        alt="media link"
-                        width={24}
-                        height={24}
-                        /></Link>
-                           <Link href="/"><Image
-                        src="/images/icons/wa.svg"
-                        alt="media link"
-                        width={24}
-                        height={24}
-                        /></Link>
-                    </div>
+                    
                 </MotionOnce>
             </div>
         </footer>
