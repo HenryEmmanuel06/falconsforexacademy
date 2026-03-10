@@ -14,12 +14,14 @@ export default function Footer() {
             <div className="container">
                 <MotionOnce className="fadein_bottom flex flex-col lg:flex-row justify-between gap-[40px]" duration={0.8}>
                     <div>
-                        <Image
+                        <Link href="/">
+                          <Image
                             src="/images/footer_logo.png"
                             alt="blog_img"
                             width={286}
                             height={32}
                         />
+                        </Link>
                         <p className="text-[#919191] text-[14px] font-normal max-w-[323px] pt-[25px]">Innovative training that focuses more on providing comprehensive trading solutions.</p>
                         <div className="flex gap-[24px] mt-4">
                         <Link href="https://www.instagram.com/falconsforexacademy/" target="_blank"><Image
