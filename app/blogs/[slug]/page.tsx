@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import Link from "next/link";
 
 function extractBlogIdFromSlug(slug: unknown) {
     if (typeof slug !== "string") return null;
@@ -54,7 +55,8 @@ export default async function BlogInnerPage({ params }: PageProps) {
     return (
         <main className="bg-white text-black">
             <section className="py-[40px] md:py-[60px]">
-                <div className="container max-w-[900px]">
+                <div className="container max-w-[900px] relative">
+                    <Link href="/blogs" className="mb-4 text-[#091B25] absolute -top-12 left-0">Back</Link>
                     {blog.blog_image ? (
                         <div className="relative w-full h-[240px] md:h-[420px] rounded-[18px] overflow-hidden bg-gray-100">
                             <Image src={blog.blog_image} alt={blog.blog_title} fill className="object-cover" priority />

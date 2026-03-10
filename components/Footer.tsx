@@ -53,7 +53,7 @@ export default function Footer() {
                         <div className="text-white">
                             <h4 className="text-[16px] font-medium">Company</h4>
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
-                                <Link href="/abou">About</Link>
+                                <Link href="/about">About</Link>
                                 <Link href="/blogs">Blogs</Link>
                                 <Link href="#testimonial">Testimonial</Link>
                             </div>
@@ -62,7 +62,7 @@ export default function Footer() {
                             <h4 className="text-[16px] font-medium">Contact</h4>
                             <div className="flex flex-col gap-[16px] pt-[20px] text-[16px] text-[#D2D2D2] font-normal">
                                 <Link href="mailto:info@falconsforexacademy.com">info@falconsforexacademy.com</Link>
-                                <Link href="#">Call: <Link href="tel:+2348036593242">+234 803 659 3242</Link> <br /> <Link href="tel:+2349066555596" className="pl-0 md:pl-[38px]">+234 906 655 5596</Link></Link>
+                                <span>Call: <Link href="tel:+2348036593242">+234 803 659 3242</Link> <br /> <Link href="tel:+2349066555596" className="pl-0 md:pl-[38px]">+234 906 655 5596</Link></span>
                             </div>
                         </div>
                         <div className="text-white">
