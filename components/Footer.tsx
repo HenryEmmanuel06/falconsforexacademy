@@ -79,7 +79,7 @@ export default function Footer() {
                 </MotionOnce>
 
                 <MotionOnce className="fadein_up flex flex-col lg:flex-row gap-[20px] justify-between items-center mt-[50px] lg:mt-[100px] pt-[32px] border-t-1 border-[#FFFFFF1A]" duration={0.8}>
-                    <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Falcons reserved.</span>
+                    <span className="text-[16px] text-[#D2D2D2] font-normal">&copy; 2026 Copyright Reserved by Falconsforexacademy.</span>
                     
                 </MotionOnce>
             </div>
